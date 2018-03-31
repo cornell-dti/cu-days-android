@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/headerTextView"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/height_header"
+	android:layout_marginStart="@dimen/margin"
+	android:textColor="@android:color/black"
+	android:textSize="@dimen/size_header"
+	android:fontFamily="@font/avenir_next_bold"
+	android:gravity="center_vertical"
+	tools:text="My Calendar" />

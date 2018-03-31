@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightGray">
+
+    <LinearLayout
+        android:id="@+id/searchEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:gravity="center_horizontal"
+	    android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/size_empty_state"
+            android:layout_height="@dimen/size_empty_state"
+            app:srcCompat="@drawable/ic_search_white_24dp"
+            android:tint="@color/darkGray"
+            android:layout_marginBottom="@dimen/margin"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_hint"
+            android:textSize="@dimen/size_empty_state_text" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/searchRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+	    tools:visibility="invisible"
+        tools:listitem="@layout/cell_feed"
+        tools:context=".SearchFragment"/>
+
+</FrameLayout>

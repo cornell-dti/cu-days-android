@@ -1,0 +1,35 @@
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory
+		android:title="@string/settings_category_notifications">
+		<SwitchPreferenceCompat
+			android:key="@string/key_receive_reminders"
+			android:title="@string/settings_receive_reminders"
+		    android:defaultValue="true"/>
+		<ListPreference
+			android:key="@string/key_notify_me"
+			android:title="@string/settings_notify_me"
+			android:summary="%s"
+			android:entries="@array/settings_notify_me_titles"
+			android:entryValues="@array/settings_notify_me_titles"
+			android:defaultValue="@string/notify_me_2_hours"
+			android:positiveButtonText="@null"
+			android:dependency="@string/key_receive_reminders"/>
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/settings_category_resources">
+		<Preference
+			android:key="@string/settings_orientation_pamphlet"
+			android:title="@string/settings_orientation_pamphlet"/>
+		<Preference
+			android:key="@string/settings_campus_map"
+			android:title="@string/settings_campus_map"/>
+		<Preference
+			android:key="@string/settings_new_students_webpage"
+			android:title="@string/settings_new_students_webpage"/>
+		<Preference
+			android:key="@string/settings_cornell_rescuer"
+		    android:title="@string/settings_cornell_rescuer"/>
+	</PreferenceCategory>
+</android.support.v7.preference.PreferenceScreen>

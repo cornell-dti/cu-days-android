@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/feedRecycler"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:context=".FeedFragment"
+		tools:listitem="@layout/cell_feed" />
+
+	<LinearLayout
+		android:id="@+id/emptyState"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:gravity="center_horizontal"
+		android:orientation="vertical"
+		android:visibility="gone"
+		tools:visibility="visible">
+
+		<ImageView
+			android:layout_width="@dimen/size_empty_state"
+			android:layout_height="@dimen/size_empty_state"
+			android:layout_marginBottom="@dimen/margin"
+			android:tint="@color/darkGray"
+			android:src="@drawable/ic_today_white_24dp" />
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/no_data_available"
+			android:textSize="@dimen/size_empty_state_text" />
+
+	</LinearLayout>
+
+</FrameLayout>
+
+
+
+
+

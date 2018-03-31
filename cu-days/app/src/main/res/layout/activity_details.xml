@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/coordinatorLayout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".DetailsActivity">
+
+	<include layout="@layout/toolbar" />
+
+	<android.support.v4.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+		<android.support.constraint.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<ImageView
+				android:id="@+id/eventImage"
+				android:layout_width="0dp"
+				android:layout_height="0dp"
+				android:scaleType="centerCrop"
+				app:layout_constraintDimensionRatio="16:9"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:ignore="ContentDescription"
+				tools:src="@mipmap/ic_launcher" />
+
+			<View
+				android:layout_width="0dp"
+				android:layout_height="0dp"
+				android:background="@drawable/gradient_image"
+				app:layout_constraintBottom_toBottomOf="@+id/eventImage"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/eventImage"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<TextView
+				android:id="@+id/titleText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/margin"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:singleLine="false"
+				android:textColor="@android:color/white"
+				android:textSize="@dimen/size_title_details"
+				android:fontFamily="@font/avenir_next_demi_bold"
+				app:layout_constraintBottom_toBottomOf="@+id/eventImage"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				tools:text="VERY VERY VERY VERY VERY VERY VERY LONG TITLE" />
+
+			<TextView
+				android:id="@+id/timeText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
+				android:textColor="@color/common_google_signin_btn_text_dark_focused"
+				android:textSize="@dimen/size_time_details"
+				android:fontFamily="@font/avenir_next_medium"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/eventImage"
+				tools:text="10:00 AM - 12:00 PM" />
+
+			<TextView
+				android:id="@+id/captionText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/half_margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/half_margin_multiline"
+				android:ellipsize="end"
+				android:scrollHorizontally="true"
+				android:textSize="@dimen/size_secondary_details"
+				app:layout_constraintEnd_toStartOf="@+id/addButton"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/timeText"
+				tools:text="Location" />
+
+			<Button
+				android:id="@+id/addButton"
+				android:layout_width="100dp"
+				android:layout_height="40dp"
+				android:layout_centerVertical="true"
+				android:layout_marginEnd="@dimen/margin"
+				android:text="@string/button_text_event_not_added"
+				android:textSize="16sp"
+				style="@style/Button"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="@+id/timeText" />
+
+			<View
+				android:id="@+id/horizontalBreakBar"
+				android:layout_width="0dp"
+				android:layout_height="@dimen/height_line"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
+				android:background="@color/horizontalBreakColor"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/captionText" />
+
+			<TextView
+				android:id="@+id/requiredLabel"
+				android:layout_width="@dimen/size_required_label"
+				android:layout_height="@dimen/size_required_label"
+				android:layout_marginStart="@dimen/margin"
+				android:background="@drawable/required_label"
+				android:gravity="center"
+				android:text="@string/required_label"
+				android:textColor="@android:color/white"
+				android:textSize="@dimen/size_required_label_text"
+				android:fontFamily="@font/avenir_next_demi_bold"
+				app:layout_constraintBottom_toBottomOf="@+id/requirementDetails"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="@+id/requirementDetails" />
+
+			<TextView
+				android:id="@+id/requirementDetails"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
+				android:textColor="@android:color/black"
+				android:textSize="@dimen/size_detail"
+				android:fontFamily="@font/avenir_next_medium"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toEndOf="@+id/requiredLabel"
+				app:layout_constraintTop_toBottomOf="@+id/horizontalBreakBar"
+				tools:text="All students will be required to sign in with their ID card." />
+
+
+			<View
+				android:id="@+id/horizontalBreakBar2"
+				android:layout_width="0dp"
+				android:layout_height="@dimen/height_line"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
+				android:background="@color/horizontalBreakColor"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/requirementDetails" />
+
+			<TextView
+				android:id="@+id/additionalText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
+				android:textSize="@dimen/size_detail"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/horizontalBreakBar2"
+				tools:text="Some additional info" />
+
+			<TextView
+				android:id="@+id/descriptionText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
+				android:textSize="@dimen/size_detail"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/additionalText"
+				tools:text="This will be your official welcome from university administrators, as well as from your student body president and other key student leaders with blah blah blah more blah blah blah"
+				tools:maxLines="3"/>
+
+			<View
+				android:id="@+id/moreButtonGradient"
+				android:layout_width="@dimen/width_more_button_gradient"
+				android:layout_height="0dp"
+				android:background="@drawable/gradient_more_button"
+				app:layout_constraintBottom_toBottomOf="@+id/moreButton"
+				app:layout_constraintRight_toLeftOf="@+id/moreButton"
+				app:layout_constraintTop_toTopOf="@+id/moreButton" />
+
+			<TextView
+				android:id="@+id/moreButton"
+				android:layout_width="wrap_content"
+				android:layout_height="0dp"
+				android:text="@string/more_button"
+				android:textColor="@color/colorPrimary"
+				android:textSize="@dimen/size_detail"
+				android:fontFamily="@font/avenir_next_medium"
+				android:background="?android:colorBackground"
+				app:layout_constraintBottom_toBottomOf="@+id/descriptionText"
+				app:layout_constraintEnd_toEndOf="@+id/descriptionText" />
+
+			<Button
+				android:id="@+id/directionsButton"
+				style="@style/Widget.AppCompat.Button.Colored"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/directions_button"
+				app:layout_constraintBottom_toBottomOf="@+id/map"
+				app:layout_constraintRight_toRightOf="@+id/map" />
+
+			<fragment
+				android:id="@+id/map"
+				android:name="com.google.android.gms.maps.MapFragment"
+				android:layout_width="0dp"
+				android:layout_height="@dimen/height_map"
+				android:layout_marginTop="@dimen/margin"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
+
+		</android.support.constraint.ConstraintLayout>
+
+	</android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>
