@@ -21,10 +21,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 {
 	private SwitchPreferenceCompat receiveReminders;
 	private ListPreference notifyMe;
-	private Preference orientationPamphlet;
 	private Preference campusMap;
-	private Preference newStudentsWebpage;
-	private Preference cornellRescuer;
+	private Preference schedule;
+	private Preference dti;
 	private static final String TAG = SettingsFragment.class.getSimpleName();
 
     /**
@@ -40,14 +39,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         notifyMe = (ListPreference) findPreference(R.string.key_notify_me);
         receiveReminders.setOnPreferenceChangeListener(this);
         notifyMe.setOnPreferenceChangeListener(this);
-        orientationPamphlet = findPreference(R.string.settings_orientation_pamphlet);
         campusMap = findPreference(R.string.settings_campus_map);
-        newStudentsWebpage = findPreference(R.string.settings_new_students_webpage);
-        cornellRescuer = findPreference(R.string.settings_cornell_rescuer);
-        orientationPamphlet.setOnPreferenceClickListener(this);
+        schedule = findPreference(R.string.settings_schedule);
+        dti = findPreference(R.string.settings_dti);
         campusMap.setOnPreferenceClickListener(this);
-        newStudentsWebpage.setOnPreferenceClickListener(this);
-        cornellRescuer.setOnPreferenceClickListener(this);
+        schedule.setOnPreferenceClickListener(this);
+        dti.setOnPreferenceClickListener(this);
     }
 
     /**
@@ -64,14 +61,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 	@Override
 	public boolean onPreferenceClick(Preference preference)
 	{
-		if (preference.equals(orientationPamphlet))
-			Internet.openToPage(Internet.ORIENTATION_PAMPHLET, getActivity());
-		else if (preference.equals(campusMap))
+		if (preference.equals(campusMap))
 			Internet.openToPage(Internet.CAMPUS_MAP, getActivity());
-		else if (preference.equals(newStudentsWebpage))
-			Internet.openToPage(Internet.NEW_STUDENTS_WEBPAGE, getActivity());
-		else if (preference.equals(cornellRescuer))
-			Internet.openToPage(Internet.CORNELL_RESCUER, getActivity());
+		else if (preference.equals(schedule))
+			Internet.openToPage(Internet.SCHEDULE, getActivity());
+		else if (preference.equals(dti))
+			Internet.openToPage(Internet.DTI, getActivity());
 		else
 			Log.e(TAG, "onPreferenceClick: unrecognized preference");
 		return true;
