@@ -31,7 +31,7 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.0'
     implementation 'com.google.guava:guava:24.1-android'
     //import Joda-Time (immutable time objects)
-    implementation 'net.danlew:android.joda:2.9.9'
+    implementation 'net.danlew:android.joda:2.9.9.3'
     //import PreferencesFragmentCompat so Settings Activity can show up in Tab Bar
     implementation 'com.android.support:preference-v14:27.1.0'
     implementation 'com.google.android.gms:play-services-maps:12.0.1'

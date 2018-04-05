@@ -1,9 +1,12 @@
 package org.cornelldti.cudays;
 
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -12,18 +15,22 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+
+import com.google.common.eventbus.Subscribe;
 
 import org.cornelldti.cudays.util.NotificationCenter;
 import org.cornelldti.cudays.util.Settings;
-import com.google.common.eventbus.Subscribe;
 
 /**
  * The first {@link android.app.Activity} that will execute when the app launches.
  * <p>
  * {@link #datePickerRecycler}: List of all dates for the orientation.
+ * {@link #LOADING_TIME}: Number of milliseconds loading screen appears for
  */
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener
 {
+	private static final long LOADING_TIME = 1500;
 	private RecyclerView datePickerRecycler;
 	private DatePickerAdapter datePickerAdapter;
 
@@ -41,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		setContentView(R.layout.activity_main);
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+		startLoadingScreen();
 		setUpRecycler();
 
 		NotificationCenter.DEFAULT.register(this);
@@ -95,6 +103,30 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		//detach the adapter so that its onDestroy methods trigger
 		datePickerRecycler.setAdapter(null);
 		NotificationCenter.DEFAULT.unregister(this);
+	}
+
+	private void startLoadingScreen()
+	{
+		final ImageView loadingImage = findViewById(R.id.logo);
+		final CoordinatorLayout mainLayout = findViewById(R.id.mainLayout);
+		mainLayout.setVisibility(View.INVISIBLE);
+		loadingImage.setVisibility(View.VISIBLE);
+
+		AnimatedVectorDrawable logoAnimation = (AnimatedVectorDrawable) loadingImage.getDrawable();
+		logoAnimation.start();
+
+		new CountDownTimer(LOADING_TIME, LOADING_TIME)
+		{
+			@Override
+			public void onTick(long millisUntilFinished) {}
+
+			@Override
+			public void onFinish()
+			{
+				loadingImage.setVisibility(View.INVISIBLE);
+				mainLayout.setVisibility(View.VISIBLE);
+			}
+		}.start();
 	}
 
 	/**

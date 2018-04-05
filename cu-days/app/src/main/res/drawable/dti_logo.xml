@@ -1,0 +1,105 @@
+<animated-vector
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:aapt="http://schemas.android.com/aapt">
+	<aapt:attr name="android:drawable">
+		<vector
+			android:name="vector"
+			android:width="800dp"
+			android:height="800dp"
+			android:viewportWidth="800"
+			android:viewportHeight="800">
+			<path
+				android:name="c"
+				android:pathData="M 613.6 577.6 C 562.5 633.8 488.4 669.2 405.9 669.2 C 251.9 669.2 127 545.9 127 393.9 C 127 241.9 251.9 118.6 405.9 118.6 C 492.1 118.6 569.2 157.2 620.4 217.9"
+				android:strokeColor="#ff324a"
+				android:strokeWidth="80"/>
+			<group android:name="group_ruler">
+				<clip-path
+					android:name="mask_ruler"
+					android:pathData="M 436.299 276.116 L 439.976 279.793 L 411.692 308.077 L 408.015 304.4 Z"/>
+				<path
+					android:name="ruler"
+					android:pathData="M 505.2 401.6 L 513.7 393.1 L 510.9 390.3 L 502.4 398.8 L 474.1 370.5 L 482.6 362 L 479.7 359.2 L 471.3 367.7 L 443 339.4 L 451.5 330.9 L 448.6 328.1 L 440.1 336.6 L 411.9 308.3 L 440.1 280 L 561.8 401.6 L 533.5 429.9 Z"
+					android:fillColor="#6f6f6f"
+					android:strokeWidth="1"/>
+			</group>
+			<group android:name="group_pencil">
+				<clip-path
+					android:name="mask_pencil"
+					android:pathData="M 401.09 239.79 L 403.565 237.315 L 431.849 265.599 L 429.374 268.074 Z"/>
+				<path
+					android:name="pencil_butt"
+					android:pathData="M 386.675 254.138 L 400.817 239.996 L 429.101 268.281 L 414.959 282.423 Z"
+					android:fillColor="#6f6f6f"
+					android:strokeWidth="1"/>
+				<path
+					android:name="pencil"
+					android:pathData="M 270.709 370.128 L 381.018 259.82 L 409.302 288.104 L 298.994 398.412 Z"
+					android:fillColor="#6f6f6f"
+					android:strokeWidth="1"/>
+				<path
+					android:name="pencil_tip"
+					android:pathData="M 258 411.1 L 265.1 375.8 L 293.4 404 Z"
+					android:fillColor="#6f6f6f"
+					android:strokeWidth="1"/>
+			</group>
+			<group android:name="group_stick">
+				<clip-path
+					android:name="mask_stick"
+					android:pathData="M 380.9 546 L 420.9 546 L 420.9 550.8 L 380.9 550.8 Z"/>
+				<path
+					android:name="stick"
+					android:pathData="M 400.9 366 C 411.9 366 420.9 375 420.9 386 L 420.9 526 C 420.9 537 411.9 546 400.9 546 C 389.9 546 380.9 537 380.9 526 L 380.9 386 C 380.9 375 389.8 366 400.9 366 Z"
+					android:fillColor="#6f6f6f"
+					android:strokeWidth="1"/>
+			</group>
+		</vector>
+	</aapt:attr>
+	<target android:name="c">
+		<aapt:attr name="android:animation">
+			<objectAnimator
+				android:propertyName="trimPathStart"
+				android:duration="500"
+				android:valueFrom="1"
+				android:valueTo="0"
+				android:valueType="floatType"
+				android:interpolator="@android:interpolator/fast_out_slow_in"/>
+		</aapt:attr>
+	</target>
+	<target android:name="mask_ruler">
+		<aapt:attr name="android:animation">
+			<objectAnimator
+				android:propertyName="pathData"
+				android:startOffset="350"
+				android:duration="650"
+				android:valueFrom="M 436.299 276.116 L 439.976 279.793 L 411.692 308.077 L 408.015 304.4 Z"
+				android:valueTo="M 436.127 276.036 L 562.345 402.255 L 534.061 430.539 L 407.843 304.321 Z"
+				android:valueType="pathType"
+				android:interpolator="@android:interpolator/fast_out_slow_in"/>
+		</aapt:attr>
+	</target>
+	<target android:name="mask_pencil">
+		<aapt:attr name="android:animation">
+			<objectAnimator
+				android:propertyName="pathData"
+				android:startOffset="350"
+				android:duration="650"
+				android:valueFrom="M 401.09 239.79 L 403.565 237.315 L 431.849 265.599 L 429.374 268.074 Z"
+				android:valueTo="M 244.186 396.657 L 403.568 237.275 L 431.852 265.56 L 272.471 424.942 Z"
+				android:valueType="pathType"
+				android:interpolator="@android:interpolator/fast_out_slow_in"/>
+		</aapt:attr>
+	</target>
+	<target android:name="mask_stick">
+		<aapt:attr name="android:animation">
+			<objectAnimator
+				android:propertyName="pathData"
+				android:startOffset="200"
+				android:duration="500"
+				android:valueFrom="M 380.9 546 L 420.9 546 L 420.9 550.8 L 380.9 550.8 Z"
+				android:valueTo="M 380.9 366 L 420.9 366 L 420.9 550.8 L 380.9 550.8 Z"
+				android:valueType="pathType"
+				android:interpolator="@android:interpolator/fast_out_slow_in"/>
+		</aapt:attr>
+	</target>
+</animated-vector>
