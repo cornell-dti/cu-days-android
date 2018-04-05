@@ -14,6 +14,7 @@ import org.cornelldti.cudays.util.NotificationCenter;
 import org.cornelldti.cudays.util.Settings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 import org.joda.time.LocalDate;
@@ -53,9 +54,11 @@ public final class UserData
 	private static CollegeType collegeType;
 	private static StudentType studentType;
 	private static final int YEAR = 2018;
-	private static final int MONTH = 1;
-	private static final int START_DAY = 18;    //Dates range: [START_DAY, END_DAY], inclusive
+	private static final int MONTH = 4;
+	private static final int START_DAY = 11;    //Dates range: [START_DAY, END_DAY], inclusive
 	private static final int END_DAY = 23;      //Note: END_DAY must > START_DAY
+	private static final Set<Integer> EXCLUDED_DAYS = new ImmutableSet.Builder<Integer>()
+			.add(14, 17, 21).build();           //days in range but not included
 	private static final String TAG = UserData.class.getSimpleName();
 
 	/**
@@ -69,6 +72,8 @@ public final class UserData
 		LocalDate today = LocalDate.now();
 		for (int i = START_DAY; i <= END_DAY; i++)
 		{
+			if (EXCLUDED_DAYS.contains(i))
+				continue;
 			LocalDate date = new LocalDate(YEAR, MONTH, i);
 			if (date.isEqual(today))
 				selectedDate = date;
