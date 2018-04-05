@@ -105,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		NotificationCenter.DEFAULT.unregister(this);
 	}
 
+	/**
+	 * Shows the loading screen for a couple of seconds.
+	 */
 	private void startLoadingScreen()
 	{
 		final ImageView loadingImage = findViewById(R.id.logo);
