@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Search Fragment that displays search results from my calender and feed.
@@ -109,9 +110,9 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 		String searchTextLowercase = searchText.toLowerCase();
 
 		//Add events that contains search text
-		for (List<Event> listsOfEvents : UserData.allEvents.values())
+		for (Map<Integer, Event> listsOfEvents : UserData.allEvents.values())
 		{
-			for (Event event : listsOfEvents)
+			for (Event event : listsOfEvents.values())
 			{
 				if (event.title.toLowerCase().contains(searchTextLowercase)
 						|| event.description.toLowerCase().contains(searchTextLowercase)

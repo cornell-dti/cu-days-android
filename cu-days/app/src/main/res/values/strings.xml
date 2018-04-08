@@ -14,9 +14,8 @@
 	<string name="dialog_clear_button">Clear</string>
 	<string name="dialog_retry_button">Retry</string>
 	<string name="filter_show_required_events">Show Required Events</string>
-	<string name="required_label">RQ</string>
-	<string name="required_for_all">Required for All Students</string>
-	<string name="required_for_category">Required for %1$s Students</string>
+	<string name="full_label">FULL</string>
+	<string name="full_description">The event is full.</string>
 	<string name="directions_button">Directions</string>
 	<string name="toast_events_changed">Your selected events were updated: %1$s</string>
 	<string name="button_text_event_added">Remove</string>

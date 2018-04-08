@@ -154,40 +154,32 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		builder.setTitle(R.string.menu_filter);
 
-		builder.setMultiChoiceItems(UserData.getFilters(getContext()), UserData.getCheckedFilters(), new DialogInterface.OnMultiChoiceClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialogInterface, int index, boolean b)
-			{
-				//row 0 is reserved for "required events"
-				if (index == 0)
-				{
-					UserData.filterRequired = !UserData.filterRequired;
-				}
-				else
-				{
-					int categoryPk = UserData.categories.get(index - 1).pk;
-					if (UserData.selectedFilters.contains(categoryPk))
-						UserData.selectedFilters.remove(categoryPk);
-					else
-						UserData.selectedFilters.add(categoryPk);
-				}
-
-				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
-				updateFilterIcon();
-			}
-		});
-		//clear button to remove all filters
-		builder.setNegativeButton(R.string.dialog_clear_button, new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i)
-			{
-				clearFilters();
-				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
-				updateFilterIcon();
-			}
-		});
+//		builder.setMultiChoiceItems(UserData.getFilters(), UserData.getCheckedFilters(), new DialogInterface.OnMultiChoiceClickListener()
+//		{
+//			@Override
+//			public void onClick(DialogInterface dialogInterface, int index, boolean b)
+//			{
+//				int categoryPk = UserData.collegeCategories.get(index).pk;
+//				if (UserData.selectedFilters.contains(categoryPk))
+//					UserData.selectedFilters.remove(categoryPk);
+//				else
+//					UserData.selectedFilters.add(categoryPk);
+//
+//				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
+//				updateFilterIcon();
+//			}
+//		});
+//		//clear button to remove all filters
+//		builder.setNegativeButton(R.string.dialog_clear_button, new DialogInterface.OnClickListener()
+//		{
+//			@Override
+//			public void onClick(DialogInterface dialogInterface, int i)
+//			{
+//				UserData.selectedFilters.clear();
+//				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
+//				updateFilterIcon();
+//			}
+//		});
 		builder.setPositiveButton(R.string.dialog_positive_button, null);
 		builder.show();
 	}
@@ -197,8 +189,8 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 	 */
 	private void clearFilters()
 	{
-		UserData.filterRequired = false;
-		UserData.selectedFilters.clear();
+		UserData.collegeFilter = null;
+		UserData.typeFilter = null;
 	}
 
 	/**
@@ -206,7 +198,7 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 	 */
 	private void updateFilterIcon()
 	{
-		if (UserData.selectedFilters.isEmpty() && !UserData.filterRequired)
+		if (UserData.collegeFilter == null && UserData.typeFilter == null)
 			filterMenu.setIcon(R.drawable.ic_tune_white_24dp);
 		else
 			filterMenu.setIcon(R.drawable.ic_tune_inverted);

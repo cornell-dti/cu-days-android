@@ -4,6 +4,7 @@
 
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="android.permission.INTERNET" />
 
 	<!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -35,11 +36,7 @@
 		<!-- Google maps API key, registered by David Chu -->
 		<meta-data
 			android:name="com.google.android.geo.API_KEY"
-			android:value="AIzaSyAfj99YO2rt_bnRE3XBXiL8_0yAaewM_eY" />
-
-		<activity
-			android:name=".InitialSettingsActivity"
-			android:launchMode="singleTop"/>
+			android:value="AIzaSyDQelklGNKzIljn_-7tVeg9qgnKVG3wrW8" />
 
 		<receiver
 			android:name=".util.AlarmReceiver"

@@ -109,34 +109,34 @@
 				app:layout_constraintTop_toBottomOf="@+id/captionText" />
 
 			<TextView
-				android:id="@+id/requiredLabel"
-				android:layout_width="@dimen/size_required_label"
-				android:layout_height="@dimen/size_required_label"
+				android:id="@+id/fullLabel"
+				android:layout_width="@dimen/width_full_label"
+				android:layout_height="@dimen/height_full_label"
 				android:layout_marginStart="@dimen/margin"
-				android:background="@drawable/required_label"
+				android:background="@drawable/full_label"
+				android:fontFamily="@font/avenir_next_demi_bold"
 				android:gravity="center"
-				android:text="@string/required_label"
+				android:text="@string/full_label"
 				android:textColor="@android:color/white"
 				android:textSize="@dimen/size_required_label_text"
-				android:fontFamily="@font/avenir_next_demi_bold"
-				app:layout_constraintBottom_toBottomOf="@+id/requirementDetails"
+				app:layout_constraintBottom_toBottomOf="@+id/fullDescription"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="@+id/requirementDetails" />
+				app:layout_constraintTop_toTopOf="@+id/fullDescription" />
 
 			<TextView
-				android:id="@+id/requirementDetails"
+				android:id="@+id/fullDescription"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_marginEnd="@dimen/margin"
 				android:layout_marginStart="@dimen/margin"
 				android:layout_marginTop="@dimen/margin"
+				android:fontFamily="@font/avenir_next_medium"
+				android:text="@string/full_description"
 				android:textColor="@android:color/black"
 				android:textSize="@dimen/size_detail"
-				android:fontFamily="@font/avenir_next_medium"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toEndOf="@+id/requiredLabel"
-				app:layout_constraintTop_toBottomOf="@+id/horizontalBreakBar"
-				tools:text="All students will be required to sign in with their ID card." />
+				app:layout_constraintStart_toEndOf="@+id/fullLabel"
+				app:layout_constraintTop_toBottomOf="@+id/horizontalBreakBar"/>
 
 
 			<View
@@ -149,7 +149,7 @@
 				android:background="@color/horizontalBreakColor"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/requirementDetails" />
+				app:layout_constraintTop_toBottomOf="@+id/fullDescription" />
 
 			<TextView
 				android:id="@+id/additionalText"

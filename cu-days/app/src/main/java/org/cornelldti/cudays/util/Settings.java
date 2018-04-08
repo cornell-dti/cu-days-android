@@ -8,12 +8,11 @@ import android.util.Log;
 import org.cornelldti.cudays.R;
 import org.cornelldti.cudays.UserData;
 import org.cornelldti.cudays.models.Category;
-import org.cornelldti.cudays.models.CollegeType;
 import org.cornelldti.cudays.models.Event;
-import org.cornelldti.cudays.models.StudentType;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -27,49 +26,11 @@ public final class Settings
 	private static final String KEY_SELECTED_EVENTS = "selectedEvents";
 	private static final String KEY_CATEGORIES = "categories";
 	private static final String KEY_VERSION = "version";
-	private static final String KEY_STUDENT_TYPE = "studentType";
-	private static final String KEY_COLLEGE_TYPE = "collegeType";
 
 	private static final String TAG = Settings.class.getSimpleName();
 
 	//suppress default constructor
 	private Settings(){}
-
-	/**
-	 * Saves the student information from app initial settings to disk.
-	 * @param context
-	 * @param studentType whether a student is a transfer or freshman
-	 * @param collegeType the name of the college the student is in.
-	 */
-	public static void setStudentInfo(Context context, StudentType studentType, CollegeType collegeType){
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		SharedPreferences.Editor editor = preferences.edit();
-		editor.putString(KEY_STUDENT_TYPE, studentType.toString());
-		editor.putString(KEY_COLLEGE_TYPE, collegeType.toString());
-		editor.apply();
-	}
-
-	/**
-	 * Gets the saved type of the student.
-	 * @return a StudentType Enum indicating the student's saved type status
-	 */
-	public static StudentType getStudentSavedType(Context context){
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		String studentTypeStringRepresentation = preferences.getString(KEY_STUDENT_TYPE, "NOTSET");
-		return StudentType.valueOf(studentTypeStringRepresentation);
-	}
-
-	/**
-	 * Gets the saved college type of the student
-	 * @return a CollegeType Enum indicating the student's saved CollegeType Status
-	 */
-	public static CollegeType getStudentSavedCollegeType(Context context){
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		String collegeTypeStringRepresentation = preferences.getString(KEY_COLLEGE_TYPE, "NOTSET");
-		return CollegeType.valueOf(collegeTypeStringRepresentation);
-	}
-
-
 
 	/**
 	 * Saves {@link UserData#allEvents} to disk.
@@ -80,8 +41,8 @@ public final class Settings
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = preferences.edit();
 		Set<String> eventStrings = new HashSet<>();
-		for (List<Event> eventsForDay : UserData.allEvents.values())
-			for (Event event : eventsForDay)
+		for (Map<Integer, Event> eventsForPk : UserData.allEvents.values())
+			for (Event event : eventsForPk.values())
 				eventStrings.add(event.toString());
 		editor.putStringSet(KEY_ALL_EVENTS, eventStrings);
 		editor.apply();
@@ -110,9 +71,9 @@ public final class Settings
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = preferences.edit();
 		Set<String> selectedEventsPks = new HashSet<>();
-		for (List<Event> selectedEventsForDay : UserData.selectedEvents.values())
-			for (Event selectedEvent : selectedEventsForDay)
-				selectedEventsPks.add(String.valueOf(selectedEvent.pk));
+		for (Map<Integer, Event> selectedEventsForPk : UserData.selectedEvents.values())
+			for (Integer pk : selectedEventsForPk.keySet())
+				selectedEventsPks.add(String.valueOf(pk));
 		editor.putStringSet(KEY_SELECTED_EVENTS, selectedEventsPks);
 		editor.apply();
 	}
@@ -149,19 +110,22 @@ public final class Settings
 		return preferences.getStringSet(KEY_SELECTED_EVENTS, new HashSet<String>());
 	}
 	/**
-	 * Saves {@link UserData#categories} to disk.
+	 * Saves {@link UserData#collegeCategories} and {@link UserData#typeCategories} to disk.
 	 * @param context
 	 */
 	public static void setCategories(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = preferences.edit();
-		Set<String> categoryStrings = new HashSet<>(UserData.categories.size());
-		for (Category category : UserData.categories)
+		Set<String> categoryStrings = new HashSet<>(UserData.collegeCategories.size() + UserData.typeCategories.size());
+		for (Category category : UserData.collegeCategories.values())
+			categoryStrings.add(category.toString());
+		for (Category category : UserData.typeCategories.values())
 			categoryStrings.add(category.toString());
 		editor.putStringSet(KEY_CATEGORIES, categoryStrings);
 		editor.apply();
 	}
+
 	/**
 	 * Returns all saved categories.
 	 * @param context

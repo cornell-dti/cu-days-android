@@ -15,10 +15,6 @@ import org.joda.time.format.DateTimeFormat;
  * Holds data and reference pointers to {@link View}s for an orientation date button. Its physical
  * representation is in {@link R.layout#cell_date_picker}.
  *
- * {@link #configured}: True if the method {@link #configure(LocalDate)} had ever been called.
- *                      Used for determining whether a default orientation date should be selected,
- *                      which should only be done once (on app launch).
- *                      More on that in {@link #configure(LocalDate)}.
  * {@link #date}: The date that this object currently represents.
  *
  * @see DatePickerAdapter

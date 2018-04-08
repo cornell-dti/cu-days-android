@@ -8,8 +8,8 @@ import org.json.JSONObject;
 
 /**
  * The category that an {@link Event} belongs in. This will be downloaded from the database via methods
- * in {@link Internet}, where new categories will be compared with saved ones. More in the constructor
- * {@link #Category(int, String, String)} below.
+ * in {@link Internet}, where new collegeCategories will be compared with saved ones. More in the constructor
+ * {@link #Category(int, String, String, boolean)} below.
  *
  * @see Event
  */
@@ -18,6 +18,7 @@ public class Category implements Comparable<Category>
 	public final int pk;
 	public final String name;
 	public final String description;
+	public final boolean isCollege;
 
 	/**
 	 * Creates a category object in-app. This should never be done organically (without initial input
@@ -26,12 +27,14 @@ public class Category implements Comparable<Category>
 	 * @param pk Unique positive ID given to each category starting from 1.
 	 * @param name For example, "College of Engineering".
 	 * @param description More information about a {@link Category}. Currently unused.
+	 * @param isCollege True if this is a college category, false if it's a type category.
 	 */
-	public Category(int pk, String name, String description)
+	public Category(int pk, String name, String description, boolean isCollege)
 	{
 		this.pk = pk;
 		this.name = name;
 		this.description = description;
+		this.isCollege = isCollege;
 	}
 	/**
 	 * Creates a category object using data downloaded from the database as a {@link JSONObject}.
@@ -40,12 +43,14 @@ public class Category implements Comparable<Category>
 	 *             pk => Int
 	 *             category => String
 	 *             description => String
+	 *             isCollege => Boolean
 	 */
 	public Category(JSONObject json)
 	{
 		pk = json.optInt("pk");
 		name = json.optString("category");
 		description = json.optString("description");
+		isCollege = json.optBoolean("isCollege");
 	}
 
 	/**
@@ -94,7 +99,7 @@ public class Category implements Comparable<Category>
 	@Override
 	public String toString()
 	{
-		return name + "|" + description + "|" + pk;
+		return name + "|" + description + "|" + pk + "|" + isCollege;
 	}
 	/**
 	 * Returns a {@link Category} from its String representation produced by {@link #toString()}.
@@ -109,6 +114,7 @@ public class Category implements Comparable<Category>
 		String name = parts[0];
 		String description = parts[1];
 		int pk = Integer.valueOf(parts[2]);
-		return new Category(pk, name, description);
+		String isCollege = parts[3];
+		return new Category(pk, name, description, isCollege.equals("1"));
 	}
 }

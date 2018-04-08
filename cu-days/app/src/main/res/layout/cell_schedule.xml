@@ -18,28 +18,12 @@
 		android:textSize="@dimen/size_title"
 		android:ellipsize="end"
 		app:layout_constraintBottom_toTopOf="@+id/titleText"
-		app:layout_constraintEnd_toStartOf="@+id/requiredLabel"
+		app:layout_constraintEnd_toStartOf="@+id/fullLabel"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintVertical_bias="0.0"
 		app:layout_constraintVertical_chainStyle="packed"
 		tools:text="8:30 - 10:00 AM" />
-
-	<TextView
-		android:id="@+id/requiredLabel"
-		android:layout_width="@dimen/size_small_required_label"
-		android:layout_height="@dimen/size_small_required_label"
-		android:background="@drawable/required_label_white"
-		android:gravity="center"
-		android:text="@string/required_label"
-		android:textColor="@color/colorPrimary"
-		android:textSize="@dimen/size_small_required_label_text"
-		android:fontFamily="@font/avenir_next_demi_bold"
-		android:visibility="gone"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		tools:text="RQ"
-		tools:visibility="visible" />
 
 	<TextView
 		android:id="@+id/titleText"
@@ -51,7 +35,7 @@
 		android:fontFamily="@font/avenir_next_demi_bold"
 		android:ellipsize="end"
 		app:layout_constraintBottom_toTopOf="@+id/captionText"
-		app:layout_constraintEnd_toStartOf="@+id/requiredLabel"
+		app:layout_constraintEnd_toStartOf="@+id/fullLabel"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/timeText"
 		tools:text="New Student Convocation" />

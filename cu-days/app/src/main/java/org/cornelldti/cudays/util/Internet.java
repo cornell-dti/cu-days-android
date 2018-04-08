@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -46,7 +47,7 @@ import java.util.Set;
  */
 public final class Internet
 {
-	public static final String DATABASE = "https://oweekapp.herokuapp.com/flow/";
+	public static final String DATABASE = "https://cornelldays.herokuapp.com/cornell_days/";
 	public static final String CAMPUS_MAP = "https://www.cornell.edu/about/maps/cornell-campus-map-2015.pdf";
 	public static final String SCHEDULE = "https://schedule.cornelldays.cornell.edu";
 	public static final String DTI = "http://cornelldti.org/";
@@ -57,20 +58,20 @@ public final class Internet
 	private Internet(){}
 
 	/**
-	 * Downloads all events and categories to update the app to the database's newest version.
+	 * Downloads all events and collegeCategories to update the app to the database's newest version.
 	 * The {@link Callback} provided will be executed when the data has been processed. The parameter for {@link Callback#execute(Object)} will be the new version (int).
 	 * A toast is sent out with titles of changed events that the user had selected.
 	 *
 	 * Note: {@link UserData#selectedEvents} will not be updated by this method.
-	 *       {@link UserData#categories} and {@link UserData#allEvents} should already be filled with events
+	 *       {@link UserData#collegeCategories} and {@link UserData#allEvents} should already be filled with events
 	 *       loaded from {@link android.content.SharedPreferences}.
 	 *
 	 * Expected JSON structure:
 	 * {
 	 *     version: Int,
-	 *     categories:
+	 *     collegeCategories:
 	 *     {
-	 *         changed: [{@link Category#Category(JSONObject)}, category2, ...],
+	 *         changed: [{@link Category#Category(JSONObject)}, typeCategory, ...],
 	 *         deleted: [{@link Category#pk}, pk2, ...]
 	 *     },
 	 *     events:
@@ -107,24 +108,22 @@ public final class Internet
 					JSONArray changedEvents = events.getJSONArray("changed");
 					JSONArray deletedEvents = events.getJSONArray("deleted");
 
-					//update categories
+					//update collegeCategories
 					for (int i = 0; i < changedCategories.length(); i++)
 					{
 						JSONObject categoryJSON = changedCategories.getJSONObject(i);
 						Category category = new Category(categoryJSON);
-						UserData.categories.remove(category);   //this works because categories are compared using pk
-						UserData.categories.add(category);
+						if (category.isCollege)
+							UserData.collegeCategories.put(category.pk, category);
+						else
+							UserData.typeCategories.put(category.pk, category);
 					}
-					//delete categories
-					Set<Integer> deletedCategoriesPks = new HashSet<>(deletedCategories.length());
+					//delete collegeCategories
 					for (int i = 0; i < deletedCategories.length(); i++)
-						deletedCategoriesPks.add(deletedCategories.getInt(i));
-					Iterator<Category> categoriesIterator = UserData.categories.iterator();
-					while (categoriesIterator.hasNext())
 					{
-						Category category = categoriesIterator.next();
-						if (deletedCategoriesPks.contains(category.pk))
-							categoriesIterator.remove();
+						int deletedCategoryPk = deletedCategories.getInt(i);
+						UserData.collegeCategories.remove(deletedCategoryPk);
+						UserData.typeCategories.remove(deletedCategoryPk);
 					}
 
 					//keep track of all changed events to notify the user
@@ -150,23 +149,18 @@ public final class Internet
 						}
 					}
 					//delete events
-					Set<Integer> deletedEventsPks = new HashSet<>(deletedEvents.length());
 					for (int i = 0; i < deletedEvents.length(); i++)
-						deletedEventsPks.add(deletedEvents.getInt(i));
-					for (List<Event> eventsForDay : UserData.allEvents.values())
 					{
-						Iterator<Event> eventsIterator = eventsForDay.iterator();
-						while (eventsIterator.hasNext())
+						int deletedEventPk = deletedEvents.getInt(i);
+						for (Map<Integer, Event> eventForPk : UserData.allEvents.values())
 						{
-							Event event = eventsIterator.next();
-							if (deletedEventsPks.contains(event.pk))
+							Event removedEvent = eventForPk.remove(deletedEventPk);
+							if (removedEvent != null)
 							{
-								changedEventsTitleAndPk.put(event.pk, event.title);
-								eventsIterator.remove();
-
-								//remove the event from notification
+								changedEventsTitleAndPk.put(deletedEventPk, removedEvent.title);
 								if (remindersOn)
-									Notifications.unscheduleForEvent(event, context);
+									Notifications.unscheduleForEvent(removedEvent, context);
+								break;
 							}
 						}
 					}
@@ -216,7 +210,7 @@ public final class Internet
 	public static void getImageForEvent(final Event event, final ImageView imageView, final CoordinatorLayout layout, final boolean saveImage)
 	{
 		final File imageFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-				+ File.separator + IMAGE_DIRECTORY + File.separator + event.pk + ".jpg");
+				+ File.separator + IMAGE_DIRECTORY + File.separator + event.imagePk + ".jpg");
 		if (imageFile.exists())
 		{
 			try

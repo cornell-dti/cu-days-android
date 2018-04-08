@@ -3,11 +3,10 @@ package org.cornelldti.cudays;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.SparseArray;
 
 import org.cornelldti.cudays.models.Category;
-import org.cornelldti.cudays.models.CollegeType;
 import org.cornelldti.cudays.models.Event;
-import org.cornelldti.cudays.models.StudentType;
 import org.cornelldti.cudays.util.Callback;
 import org.cornelldti.cudays.util.Internet;
 import org.cornelldti.cudays.util.NotificationCenter;
@@ -21,7 +20,7 @@ import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,32 +29,31 @@ import java.util.Set;
  * Handles all data shared between classes. Many of these variables have associated {@link NotificationCenter}
  * events that should be fired when they are changed, so do so when changing their values.
  *
- * {@link #allEvents}: All events on disk, sorted by date.
- * {@link #selectedEvents}: All events selected by the user, sorted by date.
- * {@link #categories}: All categories on disk.
+ * {@link #allEvents}: All events on disk, sorted by date, indexed by pk.
+ * {@link #selectedEvents}: All events selected by the user, sorted by date, indexed by pk.
+ * {@link #collegeCategories}: All categories representing colleges, indexed by pk.
+ * {@link #typeCategories}: All categories representing types, indexed by pk.
  * {@link #DATES}: Dates of the orientation. Determined from {@link #YEAR}, {@link #MONTH}, {@link #START_DAY},
  *                 and {@link #END_DAY}.
  * {@link #selectedDate}: The date to display events for.
- * {@link #selectedFilters}: An integer set that represents all the currently selected filters.
- *                               appear in the feed.
- * {@link #filterRequired}: True if "required events" filter is on.
- * {@link #collegeType}: Which college the student belongs in.
- * {@link #studentType}: What kind of student the user is.
+ * {@link #collegeFilter}: Events belonging to this college will show in feed.
+ * {@link #typeFilter}: Events belonging to this type will show in feed.
  */
 public final class UserData
 {
-	public static final Map<LocalDate, List<Event>> allEvents;
-	public static final Map<LocalDate, List<Event>> selectedEvents;
-	public static List<Category> categories = new ArrayList<>();
+	public static final Map<LocalDate, Map<Integer, Event>> allEvents;
+	public static final Map<LocalDate, Map<Integer, Event>> selectedEvents;
+	public static final Map<Integer, Category> collegeCategories = new HashMap<>();
+	public static final Map<Integer, Category> typeCategories = new HashMap<>();
 	public static final List<LocalDate> DATES;
 	public static LocalDate selectedDate;
-	public final static Set<Integer> selectedFilters = new HashSet<>();
-	public static boolean filterRequired = false;
-	private static CollegeType collegeType;
-	private static StudentType studentType;
+	@Nullable
+	public static Category collegeFilter;
+	@Nullable
+	public static Category typeFilter;
 	private static final int YEAR = 2018;
 	private static final int MONTH = 4;
-	private static final int START_DAY = 11;    //Dates range: [START_DAY, END_DAY], inclusive
+	private static final int START_DAY = 12;    //Dates range: [START_DAY, END_DAY], inclusive
 	private static final int END_DAY = 23;      //Note: END_DAY must > START_DAY
 	private static final Set<Integer> EXCLUDED_DAYS = new ImmutableSet.Builder<Integer>()
 			.add(14, 17, 21).build();           //days in range but not included
@@ -67,8 +65,8 @@ public final class UserData
 	static
 	{
 		ImmutableList.Builder<LocalDate> tempDates = ImmutableList.builder();
-		ImmutableMap.Builder<LocalDate, List<Event>> tempAllEvents = ImmutableMap.builder();
-		ImmutableMap.Builder<LocalDate, List<Event>> tempSelectedEvents = ImmutableMap.builder();
+		ImmutableMap.Builder<LocalDate, Map<Integer, Event>> tempAllEvents = ImmutableMap.builder();
+		ImmutableMap.Builder<LocalDate, Map<Integer, Event>> tempSelectedEvents = ImmutableMap.builder();
 		LocalDate today = LocalDate.now();
 		for (int i = START_DAY; i <= END_DAY; i++)
 		{
@@ -78,8 +76,8 @@ public final class UserData
 			if (date.isEqual(today))
 				selectedDate = date;
 			tempDates.add(date);
-			tempAllEvents.put(date, new ArrayList<Event>());
-			tempSelectedEvents.put(date, new ArrayList<Event>());
+			tempAllEvents.put(date, new HashMap<Integer, Event>());
+			tempSelectedEvents.put(date, new HashMap<Integer, Event>());
 		}
 		DATES = tempDates.build();
 		allEvents = tempAllEvents.build();
@@ -99,8 +97,8 @@ public final class UserData
 	 */
 	public static boolean selectedEventsContains(Event event)
 	{
-		List<Event> eventsForDate = selectedEvents.get(event.date);
-		return eventsForDate != null && eventsForDate.contains(event);
+		Map<Integer, Event> eventsForDate = selectedEvents.get(event.date);
+		return eventsForDate != null && eventsForDate.containsKey(event.pk);
 	}
 	/**
 	 * Adds event to {@link #allEvents} for the correct date according to {@link Event#date}.
@@ -109,11 +107,10 @@ public final class UserData
 	 */
 	public static void appendToAllEvents(Event event)
 	{
-		List<Event> eventsForDate = allEvents.get(event.date);
+		Map<Integer, Event> eventsForDate = allEvents.get(event.date);
 		if (eventsForDate == null)
 			return;
-		if (!eventsForDate.contains(event))
-			eventsForDate.add(event);
+		eventsForDate.put(event.pk, event);
 	}
 	/**
 	 * Removes event form {@link #allEvents}.
@@ -121,29 +118,23 @@ public final class UserData
 	 */
 	public static void removeFromAllEvents(Event event)
 	{
-		List<Event> eventsForDate = allEvents.get(event.date);
+		Map<Integer, Event> eventsForDate = allEvents.get(event.date);
 		if (eventsForDate != null)
-			eventsForDate.remove(event);
+			eventsForDate.remove(event.pk);
 	}
 	/**
 	 * Adds event to {@link #selectedEvents}. The date should match a date in {@link #DATES}.
 	 * @param event Event to add.
-	 * @return True if the event was added
 	 */
-	@CanIgnoreReturnValue
-	public static boolean insertToSelectedEvents(Event event)
+	public static void insertToSelectedEvents(Event event)
 	{
-		List<Event> eventsForDate = selectedEvents.get(event.date);
+		Map<Integer, Event> eventsForDate = selectedEvents.get(event.date);
 		if (eventsForDate == null)
 		{
 			Log.e(TAG, "insertToSelectedEvents: attempted to add event with date outside orientation");
-			return false;
+			return;
 		}
-		if (eventsForDate.contains(event))
-			return false;
-
-		eventsForDate.add(event);
-		return true;
+		eventsForDate.put(event.pk, event);
 	}
 	/**
 	 * Removes event from {@link #selectedEvents}.
@@ -151,56 +142,40 @@ public final class UserData
 	 */
 	public static void removeFromSelectedEvents(Event event)
 	{
-		List<Event> eventsForDate = selectedEvents.get(event.date);
+		Map<Integer, Event> eventsForDate = selectedEvents.get(event.date);
 		if (eventsForDate == null)
 			Log.e(TAG, "removeFromSelectedEvents: No selected events for date");
 		else
-			eventsForDate.remove(event);
+			eventsForDate.remove(event.pk);
 	}
 	/**
 	 * Clears all selected events.
 	 */
 	private static void clearSelectedEvents()
 	{
-		for (List<Event> eventsOfDay : selectedEvents.values())
+		for (Map<Integer, Event> eventsOfDay : selectedEvents.values())
 			eventsOfDay.clear();
 	}
 	/**
-	 * Linear search for an event given its pk value.
+	 * Search for an event given its pk value.
 	 * @param pk {@link Event#pk}
 	 * @return Event. May be null.
 	 */
 	@Nullable
 	public static Event eventForPk(int pk)
 	{
-		for (List<Event> eventsOfDay : allEvents.values())
-			for (Event event : eventsOfDay)
-				if (event.pk == pk)
-					return event;
+		for (Map<Integer, Event> eventsOfDay : allEvents.values())
+			if (eventsOfDay.containsKey(pk))
+				return eventsOfDay.get(pk);
 		Log.e(TAG, "eventForPk: Event not found for given pk");
 		return null;
 	}
 	/**
-	 * Linear search for a category given its pk value.
-	 * @param pk {@link Category#pk}
-	 * @return Category. May be null.
-	 * @see #eventForPk(int)
-	 */
-	@Nullable
-	public static Category categoryForPk(int pk)
-	{
-		for (Category category : categories)
-			if (category.pk == pk)
-				return category;
-		Log.e(TAG, "categoryForPk: Category not found for given pk");
-		return null;
-	}
-	/**
-	 * Loads {@link #allEvents}, {@link #selectedEvents}, {@link #categories}.
-	 * 1. Retrieves all events and categories from disk, adding them to {@link #allEvents}, {@link #categories}.
+	 * Loads {@link #allEvents}, {@link #selectedEvents}, {@link #collegeCategories}.
+	 * 1. Retrieves all events and collegeCategories from disk, adding them to {@link #allEvents}, {@link #collegeCategories}.
 	 * 2. Downloads updates from the database.
-	 * 3. Sorts all events and categories. Retrieves selected events. If anything WAS updated from the
-	 *    database, save the updates. Note that after events and categories are saved here, the lists
+	 * 3. Sorts all events and collegeCategories. Retrieves selected events. If anything WAS updated from the
+	 *    database, save the updates. Note that after events and collegeCategories are saved here, the lists
 	 *    they belong in should not be mutated any further.
 	 *
 	 * @param context
@@ -216,9 +191,13 @@ public final class UserData
 			insertToSelectedEvents(event);
 
 		Set<Category> categories = Settings.getCategories(context);
-		UserData.categories = new ArrayList<>(categories);
-
-		sortEventsAndCategories();
+		for (Category category : categories)
+		{
+			if (category.isCollege)
+				UserData.collegeCategories.put(category.pk, category);
+			else
+				UserData.typeCategories.put(category.pk, category);
+		}
 
 		Internet.getUpdatesForVersion(Settings.getVersion(context), context, new Callback<Integer>()
 		{
@@ -236,85 +215,56 @@ public final class UserData
 				for (Event selectedEvent : selectedEvents)
 					insertToSelectedEvents(selectedEvent);
 
-				//sort everything again, since things have been updated
-				sortEventsAndCategories();
 				Settings.setAllEvents(context);
 				Settings.setCategories(context);
 				Settings.setVersion(versionNum, context);
 			}
 		});
-
-		loadStudentCollegeTypes(context);
 	}
 	/**
-	 * Sorts {@link #allEvents} and {@link #categories}.
+	 * Returns the events for a given day, sorted.
 	 */
-	private static void sortEventsAndCategories()
+	public static List<Event> sortedEventsForDate(LocalDate date)
 	{
-		for (List<Event> events : allEvents.values())
-			Collections.sort(events);
-		Collections.sort(UserData.categories);
-	}
-
-	/**
-	 * Sets {@link #collegeType} and {@link #studentType} based on saved settings.
-	 * Necessary for {@link #requiredForUser(Event)} to always return the correct result.
-	 *
-	 * @param context
-	 */
-	public static void loadStudentCollegeTypes(Context context)
-	{
-		collegeType = Settings.getStudentSavedCollegeType(context);
-		studentType = Settings.getStudentSavedType(context);
-	}
-
-	/**
-	 * Checks whether the given event is required for the current user
-	 * @param event
-	 * @return true if this event is required for the current user, false otherwise.
-	 */
-	public static boolean requiredForUser(Event event)
-	{
-		if (event.required)
-			return true;
-
-		if (!event.categoryRequired)
-			return false;
-
-		boolean collegeRequired = CollegeType.toCollegeType(event.category) == collegeType;
-		boolean studentTypeRequired = StudentType.toStudentType(event.category) == studentType;
-		return collegeRequired || studentTypeRequired;
+		Map<Integer, Event> eventsForDate = allEvents.get(date);
+		if (eventsForDate == null)
+			return null;
+		List<Event> events = new ArrayList<>(eventsForDate.values());
+		Collections.sort(events);
+		return events;
 	}
 
 	/**
 	 * Returns an array of Strings of filters available to the user for {@link FeedFragment}.
-	 * @param context Context to get the string for "Show required events" {@link R.string#filter_show_required_events}
 	 * @return See method description.
 	 */
-	public static String[] getFilters(Context context)
+	public static String[] getFilters()
 	{
-		String[] filters = new String[categories.size() + 1];
-		//index 0 represents filter for "required events"
-		filters[0] = context.getString(R.string.filter_show_required_events);
-		for (int i = 1; i < filters.length; i++)
-			filters[i] = categories.get(i - 1).name;
+		String[] filters = new String[collegeCategories.size() + typeCategories.size()];
+		for (int i = 0; i < collegeCategories.size(); i++)
+			filters[i] = collegeCategories.get(i).name;
+		for (int i = 0; i < typeCategories.size(); i++)
+			filters[collegeCategories.size() + i] = typeCategories.get(i).name;
 		return filters;
 	}
 
 	/**
 	 * Returns an array of booleans that represents whether the filter is checked.
 	 *
-	 * @see #getFilters(Context)
+	 * @see #getFilters()
 	 * @return See method description
 	 */
 	public static boolean[] getCheckedFilters()
 	{
-		boolean[] filters = new boolean[categories.size() + 1];
-		//index 0 represents filter for "required events"
-		filters[0] = filterRequired;
-		//all other indices represent categories, in order.
-		for (int i = 0; i < categories.size(); i++)
-			filters[i+1] = selectedFilters.contains(categories.get(i).pk);
+		boolean[] filters = new boolean[collegeCategories.size() + typeCategories.size()];
+//		if (collegeFilter != null) {
+//			int collegeIndex = collegeCategories.indexOf(collegeFilter);
+//			filters[collegeIndex] = true;
+//		}
+//		if (typeFilter != null) {
+//			int typeIndex = typeCategories.indexOf(typeFilter);
+//			filters[collegeCategories.size() + typeIndex] = true;
+//		}
 		return filters;
 	}
 }

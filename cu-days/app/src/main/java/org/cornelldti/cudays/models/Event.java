@@ -24,12 +24,15 @@ import org.json.JSONObject;
  * from the database via methods in {@link Internet}, where new events will be compared with saved ones.
  * Notable fields are explained below:
  *
- * {@link #category}: The {@link Category#pk} of the {@link Category} this object belongs to.
+ * {@link #collegeCategory}: The {@link Category#pk} of the {@link Category} this object belongs to.
+ * {@link #typeCategory}: Same as collegeCategory.
  * {@link #date}: The date in which this event BEGINS. If this event crosses over midnight, the date
  *                is that of the 1st day.
- * {@link #categoryRequired}: True if this event is required by its category.
  * {@link #additional}: Additional information to display in a special format. Formatted like so:
- *                      ## HEADER ## ____BULLET # INFO ____BULLET # INFO
+ *                      ## HEADER ## ____BULLET # INFO ____BULLET # INFO.
+ * {@link #placeId}: String identifying location of event.
+ * {@link #full}: Is this event full.
+ * {@link #imagePk}: Pk value of the image this event is linked to.
  *
  * NOTE: Since events can cross over midnight, the {@link #endTime} may not be "after" the {@link #startTime}.
  *       Calculations should take this into account.
@@ -41,15 +44,15 @@ public class Event implements Comparable<Event>
 	public final String title;
 	public final String caption;
 	public final String description;
-	public final int category;
+	public final int collegeCategory;
+	public final int typeCategory;
 	public final LocalDate date;
 	public final LocalTime startTime;
 	public final LocalTime endTime;
-	public final boolean required;
-	public final boolean categoryRequired;
 	public final String additional;
-	public final double longitude;
-	public final double latitude;
+	public final String placeId;
+	public final boolean full;
+	public final int imagePk;
 	public final int pk;
 	public static final String DISPLAY_TIME_FORMAT = "h:mm a";  //hour:minute AM/PM
 	public static final String DISPLAY_PADDED_TIME_FORMAT = "hh:mm a";
@@ -65,31 +68,31 @@ public class Event implements Comparable<Event>
 	 * @param title For example, "New Student Check-In"
 	 * @param caption For example, "Bartels Hall"
 	 * @param description For example, "You are required to attend New Student Check-In to pick up..."
-	 * @param category See class description.
+	 * @param collegeCategory See class description.
+	 * @param typeCategory See class description
 	 * @param date For example, 7/19/2017
 	 * @param startTime For example, 8:00 AM
 	 * @param endTime For example, 4:00 PM
-	 * @param required Whether this event is required for new students.
-	 * @param categoryRequired Whether this event is required for its category.
 	 * @param additional For example, ## All new students are required to attend this program at the following times: ## ____3:30pm # Residents of Balch, Jameson, Risley, Just About Music, Ecology House, and Latino Living Center; on-campus transfers in Call Alumni Auditorium ____5:30pm # Residents of Dickson, McLLU, Donlon, High Rise 5, and Ujamaa; off-campus transfers in Call Alumni Auditorium ____8:00pm # Residents of Townhouses, Low Rises, Court-Kay-Bauer, Mews, Holland International Living Center, and Akwe:kon
-	 * @param longitude For example, -76.4785000
-	 * @param latitude For example, 42.4439000
+	 * @param placeId For example, ChIJndqRYRqC0IkR9J8bgk3mDvU
+	 * @param full See class description.
+	 * @param imagePk Unique positive ID given to each image starting from 1.
 	 * @param pk Unique positive ID given to each event starting from 1.
 	 */
-	public Event(String title, String caption, @Nullable String description, int category, LocalDate date, LocalTime startTime, LocalTime endTime, boolean required, boolean categoryRequired, String additional, double longitude, double latitude, int pk)
+	public Event(String title, String caption, String description, int collegeCategory, int typeCategory, LocalDate date, LocalTime startTime, LocalTime endTime, String additional, String placeId, boolean full, int imagePk, int pk)
 	{
 		this.title = title;
 		this.caption = caption;
-		this.description = (description == null) ? "No description available at this time" : description;
-		this.category = category;
+		this.description = description;
+		this.collegeCategory = collegeCategory;
+		this.typeCategory = typeCategory;
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.required = required;
-		this.categoryRequired = categoryRequired;
 		this.additional = additional;
-		this.longitude = longitude;
-		this.latitude = latitude;
+		this.placeId = placeId;
+		this.full = full;
+		this.imagePk = imagePk;
 		this.pk = pk;
 	}
 
@@ -113,15 +116,17 @@ public class Event implements Comparable<Event>
 		pk = json.optInt("pk");
 		description = json.optString("description");
 		caption = json.optString("location");
-		category = json.optInt("category");
+		collegeCategory = json.optInt("college_category");
+		typeCategory = json.optInt("type_category");
 		String startDate = json.optString("start_date");
 		String startTime = json.optString("start_time");
 		String endTime = json.optString("end_time");
-		required = json.optBoolean("required");
-		categoryRequired = json.optBoolean("category_required");
+		String placeId = json.optString("place_ID");
+		//defaults to cornell's place id
+		this.placeId = placeId.isEmpty() ? "ChIJndqRYRqC0IkR9J8bgk3mDvU" : placeId;
 		additional = json.optString("additional");
-		longitude = json.optDouble("longitude");
-		latitude = json.optDouble("latitude");
+		full = json.optBoolean("full");
+		imagePk = json.optInt("image_pk");
 
 		date = LocalDate.parse(startDate, DATABASE_DATE_FORMATTER);
 		this.startTime = LocalTime.parse(startTime, DATABASE_TIME_FORMATTER);
@@ -144,49 +149,6 @@ public class Event implements Comparable<Event>
 	public String readableDate()
 	{
 		return date.toString("EEEE, MMM d");
-	}
-	/**
-	 * Returns the formatted additional text, with headers and bullets.
-	 * String is like so: ## HEADER ## ____BULLET # INFO ____BULLET # INFO.
-	 * PLEASE check that {@link #additional} is not empty before calling this method.
-	 *
-	 * @return Formatted text to be set for a {@link android.widget.TextView}
-	 */
-	public SpannableStringBuilder formattedAdditionalText()
-	{
-		SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
-		String[] headerAndRemaining = additional.split("##");
-		String header = headerAndRemaining[1].trim();
-		String remaining = headerAndRemaining[2].trim();
-
-		//set header
-		stringBuilder.append(header).append("\n\n");
-		stringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, header.length(), 0);
-
-		String[] sections = remaining.split("____");
-		for (String section : sections)
-		{
-			if (section.isEmpty())
-				continue;
-			String[] bulletAndInfo = section.trim().split(" # ");
-			String bullet = bulletAndInfo[0];
-			String info = bulletAndInfo[1];
-
-			//set bullet
-			int bulletStart = stringBuilder.length();
-			int bulletEnd = bulletStart + bullet.length();
-			stringBuilder.append(bullet).append("\n");
-			stringBuilder.setSpan(new StyleSpan(Typeface.BOLD), bulletStart, bulletEnd, 0);
-			stringBuilder.setSpan(new ForegroundColorSpan(Color.RED), bulletStart, bulletEnd, 0);
-
-			//set info
-			int infoStart = stringBuilder.length();
-			int infoEnd = infoStart + info.length();
-			stringBuilder.append(info).append("\n");
-			stringBuilder.setSpan(new LeadingMarginSpan.Standard(100), infoStart, infoEnd, 0);
-		}
-
-		return stringBuilder;
 	}
 	/**
 	 * Returns the {@link #pk}, which is unique to each {@link Event}.
@@ -245,10 +207,9 @@ public class Event implements Comparable<Event>
 	@Override
 	public String toString()
 	{
-		return title + "|" + caption + "|" + description + "|" + category + "|" + DATABASE_DATE_FORMATTER.print(date) +
+		return title + "|" + caption + "|" + description + "|" + collegeCategory + "|" + typeCategory + "|" + DATABASE_DATE_FORMATTER.print(date) +
 				"|" + DATABASE_TIME_FORMATTER.print(startTime) + "|" + DATABASE_TIME_FORMATTER.print(endTime) + "|" +
-				(required ? 1 : 0) + "|" + pk + "|" + (categoryRequired ? 1 : 0) + "|" + additional + "|" +
-				longitude + "|" + latitude + "|";
+				(full ? 1 : 0) + "|" + pk + "|" + additional + "|" + placeId + "|" + imagePk;
 	}
 	/**
 	 * Returns a {@link Event} from its String representation produced by {@link #toString()}.
@@ -263,19 +224,17 @@ public class Event implements Comparable<Event>
 		String title = parts[0];
 		String caption = parts[1];
 		String description = parts[2];
-		String category = parts[3];
-		String date = parts[4];
-		String startTime = parts[5];
-		String endTime = parts[6];
-		String required = parts[7];
-		String pk = parts[8];
-		String categoryRequired = parts[9];
+		String collegeCategory = parts[3];
+		String typeCategory = parts[4];
+		String date = parts[5];
+		String startTime = parts[6];
+		String endTime = parts[7];
+		String full = parts[8];
+		String pk = parts[9];
 		String additional = parts[10];
-		String longitude = parts[11];
-		String latitude = parts[12];
-		return new Event(title, caption, description, Integer.valueOf(category), LocalDate.parse(date, DATABASE_DATE_FORMATTER),
-				LocalTime.parse(startTime, DATABASE_TIME_FORMATTER), LocalTime.parse(endTime, DATABASE_TIME_FORMATTER),
-				required.equals("1"), categoryRequired.equals("1"), additional, Double.valueOf(longitude),
-				Double.valueOf(latitude), Integer.valueOf(pk));
+		String placeId = parts[11];
+		String imagePk = parts[12];
+		return new Event(title, caption, description, Integer.valueOf(collegeCategory), Integer.valueOf(typeCategory), LocalDate.parse(date, DATABASE_DATE_FORMATTER),
+				LocalTime.parse(startTime, DATABASE_TIME_FORMATTER), LocalTime.parse(endTime, DATABASE_TIME_FORMATTER), additional, placeId, full.equals("1"), Integer.valueOf(imagePk), Integer.valueOf(pk));
 	}
 }

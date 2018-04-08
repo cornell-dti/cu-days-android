@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,12 +26,19 @@ import org.cornelldti.cudays.util.Internet;
 import org.cornelldti.cudays.util.NotificationCenter;
 import org.cornelldti.cudays.util.Notifications;
 import org.cornelldti.cudays.util.Settings;
+
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBufferResponse;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 /**
  * Displays a user-selected event in a separate page. An {@link android.app.Activity} is used instead
@@ -42,6 +50,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * {@link Internet#getImageForEvent(Event, ImageView, CoordinatorLayout, boolean)}.
  * A reference to the {@link CoordinatorLayout} is necessary to display
  * {@link android.support.design.widget.Snackbar}.
+ * {@link #placeName}, {@link #placeAddress}: Info extracted from Google Maps place in {@link #onMapReady(GoogleMap)}.
+ *
  */
 public class DetailsActivity extends AppCompatActivity implements OnMapReadyCallback, Button.OnClickListener
 {
@@ -54,13 +64,18 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	private TextView timeText;
 	private TextView descriptionText;
 	private TextView additionalText;
-	private TextView requiredLabel;
-	private TextView requirementDetails;
+	private TextView fullLabel;
+	private TextView fullDescription;
 	private View horizontalBreakBar;
 	private Button addButton;
 	private TextView moreButton;
 	private View moreButtonGradient;
 	private Button directionsButton;
+	private GeoDataClient geoDataClient;
+	@Nullable
+	private String placeName;
+	@Nullable
+	private String placeAddress;
 
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 	private static final int MAP_ZOOM = 16;
@@ -97,6 +112,8 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		//get the event
 		event = Event.fromString(getIntent().getExtras().getString(EVENT_KEY));
 
+		geoDataClient = Places.getGeoDataClient(this);
+
 		findViews();
 		setEventData();
 	}
@@ -112,8 +129,8 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		captionText = findViewById(R.id.captionText);
 		timeText = findViewById(R.id.timeText);
 		horizontalBreakBar = findViewById(R.id.horizontalBreakBar);
-		requiredLabel = findViewById(R.id.requiredLabel);
-		requirementDetails = findViewById(R.id.requirementDetails);
+		fullLabel = findViewById(R.id.fullLabel);
+		fullDescription = findViewById(R.id.fullDescription);
 		additionalText = findViewById(R.id.additionalText);
 		descriptionText = findViewById(R.id.descriptionText);
 		addButton = findViewById(R.id.addButton);
@@ -150,7 +167,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		directionsButton.setOnClickListener(this);
 
 		configureDescription();
-		configureRequired();
+		configureFull();
 		configureImage();
 	}
 
@@ -188,36 +205,23 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		if (!event.additional.isEmpty())
 		{
 			additionalText.setVisibility(View.VISIBLE);
-			additionalText.setText(event.formattedAdditionalText());
+			additionalText.setText(event.additional);
 		}
 		else
 			additionalText.setVisibility(View.GONE);
 	}
 
 	/**
-	 * Show/hide the {@link #requiredLabel} and set the text for {@link #requirementDetails} based
-	 * on whether the event is required. If the event is required (but not for this user),
-	 * {@link #requiredLabel} will be gray.
+	 * Show/hide the {@link #fullLabel} and set the text for {@link #fullDescription} based
+	 * on whether the event is full.
 	 */
-	private void configureRequired()
+	private void configureFull()
 	{
-		if (!(event.required || event.categoryRequired))
-		{
-			requiredLabel.setVisibility(View.GONE);
-			requirementDetails.setVisibility(View.GONE);
-			horizontalBreakBar.setVisibility(View.GONE);
-		}
-		else
-		{
-			//change color of RQ label based on whether or not it's required for this user
-			int requiredLabelBg = UserData.requiredForUser(event) ? R.drawable.required_label : R.drawable.required_label_gray;
-			requiredLabel.setBackground(ContextCompat.getDrawable(this, requiredLabelBg));
+		int visibility = event.full ? View.VISIBLE : View.GONE;
 
-			if (event.required)
-				requirementDetails.setText(R.string.required_for_all);
-			else
-				requirementDetails.setText(getString(R.string.required_for_category, UserData.categoryForPk(event.category).name));
-		}
+		fullLabel.setVisibility(visibility);
+		fullDescription.setVisibility(visibility);
+		horizontalBreakBar.setVisibility(visibility);
 	}
 
 	/**
@@ -305,16 +309,33 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	}
 
 	/**
-	 * Loads {@link Event#latitude} and longitude onto the map, adds a marker.
+	 * Loads {@link #placeName} and {@link #placeAddress} from {@link Event#placeId} and adds a marker to the map.
 	 *
 	 * @param map {@inheritDoc}
 	 */
 	@Override
-	public void onMapReady(GoogleMap map)
+	public void onMapReady(final GoogleMap map)
 	{
-		LatLng position = new LatLng(event.latitude, event.longitude);
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
-		map.addMarker(new MarkerOptions().position(position).title(event.caption));
+		geoDataClient.getPlaceById(event.placeId).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>()
+		{
+			@Override
+			public void onComplete(@NonNull Task<PlaceBufferResponse> task)
+			{
+				if (!task.isSuccessful()) {
+					Log.e(TAG, "onMapReady: place not found");
+					return;
+				}
+
+				PlaceBufferResponse places = task.getResult();
+				Place place = places.get(0);
+				placeName = place.getName().toString();
+				placeAddress = place.getAddress().toString();
+				LatLng position = place.getLatLng();
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
+				map.addMarker(new MarkerOptions().position(position).title(event.caption));
+				places.release();
+			}
+		});
 	}
 
 	/**
@@ -322,7 +343,10 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	 */
 	private void startMap()
 	{
-		Uri uri = Uri.parse("geo:0,0?q=" + event.latitude + "," + event.longitude + "(" + event.caption + ")");
+		if (placeName == null || placeAddress == null)
+			return;
+
+		Uri uri = Uri.parse("geo:0,0?q=" + placeName + ", " + placeAddress);
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		intent.setPackage("com.google.android.apps.maps");
 		startActivity(intent);

@@ -115,7 +115,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	 */
 	private void loadData()
 	{
-		List<Event> events = new ArrayList<>(UserData.allEvents.get(date));
+		List<Event> events = new ArrayList<>(UserData.sortedEventsForDate(date));
 		filterEvents(events);
 
 		if (events.isEmpty())
@@ -133,7 +133,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	 */
 	private void filterEvents(Collection<Event> events)
 	{
-		if (UserData.selectedFilters.isEmpty() && !UserData.filterRequired)
+		if (UserData.collegeFilter == null && UserData.typeFilter == null)
 			return;
 
 		Iterator<Event> eventsIterator = events.iterator();
@@ -141,9 +141,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 		{
 			Event event = eventsIterator.next();
 
-			if (UserData.selectedFilters.contains(event.category))
+			if (UserData.collegeFilter != null && UserData.collegeFilter.pk == event.collegeCategory)
 				continue;
-			if (UserData.filterRequired && UserData.requiredForUser(event))
+			if (UserData.typeFilter != null && UserData.typeFilter.pk == event.typeCategory)
 				continue;
 			eventsIterator.remove();
 		}

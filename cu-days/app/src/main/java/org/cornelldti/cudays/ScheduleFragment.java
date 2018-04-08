@@ -175,7 +175,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	 */
 	private void drawCells()
 	{
-		List<Event> selectedEvents = UserData.selectedEvents.get(date);
+		List<Event> selectedEvents = new ArrayList<>(UserData.selectedEvents.get(date).values());
 		Collections.sort(selectedEvents);
 		if (selectedEvents.isEmpty())
 			return;
@@ -240,12 +240,9 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		scheduleCell.setOnClickListener(this);
 		if (eventOngoing(event))
 			scheduleCell.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_schedule_cell_ripple));
-		TextView required = scheduleCell.findViewById(R.id.requiredLabel);
 		TextView time = scheduleCell.findViewById(R.id.timeText);
 		TextView title = scheduleCell.findViewById(R.id.titleText);
 		TextView caption = scheduleCell.findViewById(R.id.captionText);
-		if (UserData.requiredForUser(event))
-			required.setVisibility(View.VISIBLE);
 		time.setText(event.startTime.toString("h:mm") + " - " + event.endTime.toString("h:mm a"));
 		title.setText(event.title);
 		caption.setText(event.caption);

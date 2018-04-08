@@ -22,7 +22,6 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	private final TextView endTimeText;
 	private final TextView titleText;
 	private final TextView captionText;
-	private final TextView requiredLabel;
 	private final Context context;
 	private Event event;
 	private static final String	TAG = FeedCell.class.getSimpleName();
@@ -38,7 +37,6 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		endTimeText = itemView.findViewById(R.id.endTimeText);
 		titleText = itemView.findViewById(R.id.titleText);
 		captionText = itemView.findViewById(R.id.captionText);
-		requiredLabel = itemView.findViewById(R.id.requiredLabel);
 		itemView.setOnClickListener(this);
 		context = itemView.getContext();
 	}
@@ -54,7 +52,15 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		endTimeText.setText(event.endTime.toString(Event.DISPLAY_PADDED_TIME_FORMAT));
 		titleText.setText(event.title);
 		captionText.setText(event.caption);
-		setVisible(UserData.requiredForUser(event), requiredLabel);
+
+		if (event.full)
+		{
+			titleText.setAlpha(0.5f);
+		}
+		else
+		{
+			titleText.setAlpha(1);
+		}
 	}
 	/**
 	 * This object has been clicked. Open the details page.
@@ -64,18 +70,5 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	public void onClick(View v)
 	{
 		DetailsActivity.startWithEvent(event, context);
-	}
-
-	/**
-	 * Helper method to set the visibility of a view based on a boolean expression.
-	 * @param condition If true, the view is visible. If false, the view is gone.
-	 * @param view The view to set visibility of.
-	 */
-	private void setVisible(boolean condition, View view)
-	{
-		if (condition)
-			view.setVisibility(View.VISIBLE);
-		else
-			view.setVisibility(View.GONE);
 	}
 }

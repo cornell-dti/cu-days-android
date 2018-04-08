@@ -15,6 +15,7 @@ import org.cornelldti.cudays.models.Event;
 import org.joda.time.LocalDateTime;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Handles creation & destruction of all local notifications.
@@ -125,8 +126,8 @@ public final class Notifications
 	 */
 	public static void scheduleForEvents(int hoursBefore, Context context)
 	{
-		for (List<Event> eventsOfDay : UserData.selectedEvents.values())
-			for (Event event : eventsOfDay)
+		for (Map<Integer, Event> eventsOfDay : UserData.selectedEvents.values())
+			for (Event event : eventsOfDay.values())
 				scheduleForEvent(event, hoursBefore, context);
 	}
 	/**
@@ -136,8 +137,8 @@ public final class Notifications
 	 */
 	public static void unscheduleForEvents(Context context)
 	{
-		for (List<Event> eventsOfDay : UserData.selectedEvents.values())
-			for (Event event : eventsOfDay)
+		for (Map<Integer, Event> eventsOfDay : UserData.selectedEvents.values())
+			for (Event event : eventsOfDay.values())
 				unscheduleForEvent(event, context);
 	}
 }
