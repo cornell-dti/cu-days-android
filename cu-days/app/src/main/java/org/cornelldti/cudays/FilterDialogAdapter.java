@@ -23,8 +23,8 @@ public class FilterDialogAdapter extends ArrayAdapter<String>
 	public static final int CATEGORY_COLLEGE = 1;
 	public static final int HEADER_TYPE = 2;
 	public static final int CATEGORY_TYPE = 3;
-	public List<Category> collegeCategories;
-	public List<Category> typeCategories;
+	public final List<Category> collegeCategories;
+	public final List<Category> typeCategories;
 	private static final String TAG = FilterDialogAdapter.class.getSimpleName();
 
 	public FilterDialogAdapter(Context context)

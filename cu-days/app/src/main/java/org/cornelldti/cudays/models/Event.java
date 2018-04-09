@@ -1,13 +1,6 @@
 package org.cornelldti.cudays.models;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.LeadingMarginSpan;
-import android.text.style.StyleSpan;
 
 import org.cornelldti.cudays.ScheduleFragment;
 import org.cornelldti.cudays.util.Internet;

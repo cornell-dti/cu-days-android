@@ -22,9 +22,6 @@
 	<dimen name="size_hour_textview">16sp</dimen>
 	<dimen name="height_full_label">32dp</dimen>
 	<dimen name="width_full_label">48dp</dimen>
-	<dimen name="size_required_label_text">14sp</dimen>
-	<dimen name="size_small_required_label">24dp</dimen>
-	<dimen name="size_small_required_label_text">10sp</dimen>
 	<dimen name="size_empty_state">100dp</dimen>
 	<dimen name="size_empty_state_text">14sp</dimen>
 	<dimen name="size_subheader">14sp</dimen>

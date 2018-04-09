@@ -3,7 +3,6 @@ package org.cornelldti.cudays;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.util.SparseArray;
 
 import org.cornelldti.cudays.models.Category;
 import org.cornelldti.cudays.models.Event;
@@ -14,7 +13,6 @@ import org.cornelldti.cudays.util.Settings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 import org.joda.time.LocalDate;
 

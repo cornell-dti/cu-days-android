@@ -11,7 +11,6 @@ import org.cornelldti.cudays.models.Category;
 import org.cornelldti.cudays.models.Event;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 

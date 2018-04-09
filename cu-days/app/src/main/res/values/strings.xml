@@ -26,29 +26,6 @@
 	<string name="toast_text_event_removed">Removed event from schedule.</string>
 	<string name="more_button">more</string>
 
-	<string name="initial_settings_student">What type of incoming student are you?</string>
-	<string name="initial_settings_student_freshman">Incoming Freshman</string>
-	<string name="initial_settings_student_transfer">Transfer</string>
-	<string name="initial_settings_college">What college do you belong to?</string>
-	<string name="initial_settings_welcome">Welcome to Cornell Orientation Week!</string>
-	<string name="initial_settings_welcome_header_1">Get There.</string>
-	<string name="initial_settings_welcome_body_1">Use your customized calendar to find events for your class and college.</string>
-	<string name="initial_settings_welcome_header_2">Explore.</string>
-	<string name="initial_settings_welcome_body_2">Browse, search, and filter through orientation events to add to your calendar.</string>
-	<string name="initial_settings_welcome_header_3">Stay Informed.</string>
-	<string name="initial_settings_welcome_body_3">Use your Orientation pamphlet for other important information and resources.</string>
-	<string name="initial_settings_start_button">Get Started</string>
-	<string name="initial_settings_redownload">Orientation events could not be downloaded</string>
-
-	<string name="college_als">Agriculture and Life Sciences</string>
-	<string name="college_aap">Architecture, Art, and Planning</string>
-	<string name="college_arts">Arts &amp; Sciences</string>
-	<string name="college_eng">Engineering</string>
-	<string name="college_johnson">Johnson School of Business</string>
-	<string name="college_ilr">Industrial Labor Relations</string>
-	<string name="college_he">Human Ecology</string>
-	<string name="college_not_set">ERROR: College not set</string>
-
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>
 	<string name="settings_category_resources">Resources</string>
@@ -59,7 +36,6 @@
 	<string name="key_receive_reminders">receiveReminders</string>
 	<string name="settings_notify_me">Notify me…</string>
 	<string name="key_notify_me">notifyMe</string>
-	<string name="schedule_auto_add_notice">All required events have been added to your schedule ; )</string>
 
 	<string name="notify_me_time_of">At time of event</string>
 	<string name="notify_me_1_hour">1 hour before</string>

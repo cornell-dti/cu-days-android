@@ -14,7 +14,6 @@ import org.cornelldti.cudays.models.Event;
 
 import org.joda.time.LocalDateTime;
 
-import java.util.List;
 import java.util.Map;
 
 /**
