@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		BottomNavigationView bottomNavBar = findViewById(R.id.navigation);
 		bottomNavBar.setOnNavigationItemSelectedListener(this);
 		//Highlights feed tab bar button
-		bottomNavBar.setSelectedItemId(R.id.bottom_nav_my_schedule);
+		bottomNavBar.setSelectedItemId(R.id.bottom_nav_feed);
 	}
 
 	/**
