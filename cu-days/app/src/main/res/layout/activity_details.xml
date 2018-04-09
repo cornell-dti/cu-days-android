@@ -118,7 +118,7 @@
 				android:gravity="center"
 				android:text="@string/full_label"
 				android:textColor="@android:color/white"
-				android:textSize="@dimen/size_required_label_text"
+				android:textSize="@dimen/size_full_label_text"
 				app:layout_constraintBottom_toBottomOf="@+id/fullDescription"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="@+id/fullDescription" />

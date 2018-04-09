@@ -22,6 +22,7 @@
 	<dimen name="size_hour_textview">16sp</dimen>
 	<dimen name="height_full_label">32dp</dimen>
 	<dimen name="width_full_label">48dp</dimen>
+	<dimen name="size_full_label_text">14sp</dimen>
 	<dimen name="size_empty_state">100dp</dimen>
 	<dimen name="size_empty_state_text">14sp</dimen>
 	<dimen name="size_subheader">14sp</dimen>

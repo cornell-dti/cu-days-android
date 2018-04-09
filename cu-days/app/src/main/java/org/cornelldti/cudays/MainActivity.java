@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -111,9 +112,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	private void startLoadingScreen()
 	{
 		final ImageView loadingImage = findViewById(R.id.logo);
+		final TextView loadingText = findViewById(R.id.logoText);
 		final CoordinatorLayout mainLayout = findViewById(R.id.mainLayout);
 		mainLayout.setVisibility(View.INVISIBLE);
 		loadingImage.setVisibility(View.VISIBLE);
+		loadingText.setVisibility(View.VISIBLE);
 
 		AnimatedVectorDrawable logoAnimation = (AnimatedVectorDrawable) loadingImage.getDrawable();
 		logoAnimation.start();
@@ -127,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 			public void onFinish()
 			{
 				loadingImage.setVisibility(View.INVISIBLE);
+				loadingText.setVisibility(View.INVISIBLE);
 				mainLayout.setVisibility(View.VISIBLE);
 			}
 		}.start();
