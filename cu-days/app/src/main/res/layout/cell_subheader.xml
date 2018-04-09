@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/height_list_item"
+	tools:text="Subheader"
+	android:id="@+id/text"
+	android:textSize="@dimen/size_subheader"
+	android:textColor="@color/colorPrimary"
+	android:paddingLeft="@dimen/margin"
+	android:paddingRight="@dimen/margin"
+	android:gravity="center_vertical"
+	android:singleLine="true"
+	android:fontFamily="@font/avenir_next_demi_bold"/>

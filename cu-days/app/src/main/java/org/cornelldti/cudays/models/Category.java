@@ -99,7 +99,7 @@ public class Category implements Comparable<Category>
 	@Override
 	public String toString()
 	{
-		return name + "|" + description + "|" + pk + "|" + isCollege;
+		return name + "|" + description + "|" + pk + "|" + (isCollege ? 1 : 0);
 	}
 	/**
 	 * Returns a {@link Category} from its String representation produced by {@link #toString()}.

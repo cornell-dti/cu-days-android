@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/height_list_item"
+	android:descendantFocusability="blocksDescendants">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:text="Radio item"
+		android:id="@+id/text"
+		android:textSize="@dimen/size_subheader"
+		android:layout_marginLeft="@dimen/margin"
+		android:layout_marginRight="@dimen/margin"
+		android:gravity="center_vertical"
+		android:singleLine="true"
+		android:fontFamily="@font/avenir_next_regular"
+		android:layout_alignParentLeft="true"
+		android:layout_toLeftOf="@+id/radio"/>
+	<RadioButton
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:id="@+id/radio"
+		android:layout_alignParentRight="true"
+		android:layout_marginRight="@dimen/margin"
+		android:focusable="false"
+		android:clickable="false"/> <!-- must let list item intercept click events so listener is called -->
+</RelativeLayout>

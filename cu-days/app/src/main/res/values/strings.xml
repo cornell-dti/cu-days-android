@@ -13,7 +13,8 @@
 	<string name="dialog_positive_button">OK</string>
 	<string name="dialog_clear_button">Clear</string>
 	<string name="dialog_retry_button">Retry</string>
-	<string name="filter_show_required_events">Show Required Events</string>
+	<string name="filter_college">Colleges</string>
+	<string name="filter_type">Types</string>
 	<string name="full_label">FULL</string>
 	<string name="full_description">The event is full.</string>
 	<string name="directions_button">Directions</string>

@@ -56,7 +56,7 @@ public final class UserData
 	private static final int START_DAY = 12;    //Dates range: [START_DAY, END_DAY], inclusive
 	private static final int END_DAY = 23;      //Note: END_DAY must > START_DAY
 	private static final Set<Integer> EXCLUDED_DAYS = new ImmutableSet.Builder<Integer>()
-			.add(14, 17, 21).build();           //days in range but not included
+			.add(14, 15, 17, 18, 21, 22).build();           //days in range but not included
 	private static final String TAG = UserData.class.getSimpleName();
 
 	/**
@@ -232,39 +232,5 @@ public final class UserData
 		List<Event> events = new ArrayList<>(eventsForDate.values());
 		Collections.sort(events);
 		return events;
-	}
-
-	/**
-	 * Returns an array of Strings of filters available to the user for {@link FeedFragment}.
-	 * @return See method description.
-	 */
-	public static String[] getFilters()
-	{
-		String[] filters = new String[collegeCategories.size() + typeCategories.size()];
-		for (int i = 0; i < collegeCategories.size(); i++)
-			filters[i] = collegeCategories.get(i).name;
-		for (int i = 0; i < typeCategories.size(); i++)
-			filters[collegeCategories.size() + i] = typeCategories.get(i).name;
-		return filters;
-	}
-
-	/**
-	 * Returns an array of booleans that represents whether the filter is checked.
-	 *
-	 * @see #getFilters()
-	 * @return See method description
-	 */
-	public static boolean[] getCheckedFilters()
-	{
-		boolean[] filters = new boolean[collegeCategories.size() + typeCategories.size()];
-//		if (collegeFilter != null) {
-//			int collegeIndex = collegeCategories.indexOf(collegeFilter);
-//			filters[collegeIndex] = true;
-//		}
-//		if (typeFilter != null) {
-//			int typeIndex = typeCategories.indexOf(typeFilter);
-//			filters[collegeCategories.size() + typeIndex] = true;
-//		}
-		return filters;
 	}
 }

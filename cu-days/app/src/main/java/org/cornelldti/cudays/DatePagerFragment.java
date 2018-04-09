@@ -121,7 +121,7 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 	{
 		inflater.inflate(R.menu.menu_of_feed, menu);
 		filterMenu = menu.findItem(R.id.filterMenu);
-		updateFilterIcon();
+		updateFilterIcon(null);
 	}
 
 	/**
@@ -137,66 +137,19 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 		switch (item.getItemId())
 		{
 			case R.id.filterMenu:
-				showFilterDialog();
+				FilterDialog filterDialog = new FilterDialog();
+				filterDialog.show(getFragmentManager(), "tag");
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-
-	/**
-	 * Shows the dialog that allows the user to choose what {@link Category} to filter events by.
-	 * If the user does select a NEW category to filter by, an event is sent out notifying listeners.
-	 */
-	private void showFilterDialog()
-	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		builder.setTitle(R.string.menu_filter);
-
-//		builder.setMultiChoiceItems(UserData.getFilters(), UserData.getCheckedFilters(), new DialogInterface.OnMultiChoiceClickListener()
-//		{
-//			@Override
-//			public void onClick(DialogInterface dialogInterface, int index, boolean b)
-//			{
-//				int categoryPk = UserData.collegeCategories.get(index).pk;
-//				if (UserData.selectedFilters.contains(categoryPk))
-//					UserData.selectedFilters.remove(categoryPk);
-//				else
-//					UserData.selectedFilters.add(categoryPk);
-//
-//				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
-//				updateFilterIcon();
-//			}
-//		});
-//		//clear button to remove all filters
-//		builder.setNegativeButton(R.string.dialog_clear_button, new DialogInterface.OnClickListener()
-//		{
-//			@Override
-//			public void onClick(DialogInterface dialogInterface, int i)
-//			{
-//				UserData.selectedFilters.clear();
-//				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
-//				updateFilterIcon();
-//			}
-//		});
-		builder.setPositiveButton(R.string.dialog_positive_button, null);
-		builder.show();
-	}
-
-	/**
-	 * Remove all filters.
-	 */
-	private void clearFilters()
-	{
-		UserData.collegeFilter = null;
-		UserData.typeFilter = null;
-	}
-
 	/**
 	 * Change the filter icon based on whether any filters are activated.
 	 */
-	private void updateFilterIcon()
+	@Subscribe
+	public void updateFilterIcon(NotificationCenter.EventFilterChanged eventFilterChanged)
 	{
 		if (UserData.collegeFilter == null && UserData.typeFilter == null)
 			filterMenu.setIcon(R.drawable.ic_tune_white_24dp);
