@@ -144,6 +144,7 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 
 	/**
 	 * Change the filter icon based on whether any filters are activated.
+	 * @param eventFilterChanged Ignored.
 	 */
 	@Subscribe
 	public void updateFilterIcon(NotificationCenter.EventFilterChanged eventFilterChanged)

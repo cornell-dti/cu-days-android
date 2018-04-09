@@ -17,6 +17,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Manages the list of categories shown in {@link FilterDialog}.
+ *
+ * {@link #HEADER_COLLEGE}, {@link #CATEGORY_COLLEGE}, {@link #HEADER_TYPE}, {@link #CATEGORY_TYPE}:
+ * Possible types of items in the list; either subheaders or categories.
+ *
+ * {@link #collegeCategories}, {@link #typeCategories}: Sorted versions of {@link UserData#collegeCategories}
+ * and {@link UserData#typeCategories}'s values, to be displayed for the user to select in the list.
+ */
 public class FilterDialogAdapter extends ArrayAdapter<String>
 {
 	public static final int HEADER_COLLEGE = 0;
@@ -27,6 +36,11 @@ public class FilterDialogAdapter extends ArrayAdapter<String>
 	public final List<Category> typeCategories;
 	private static final String TAG = FilterDialogAdapter.class.getSimpleName();
 
+	/**
+	 * Create the adapter and give the parent an arbitrary layout.
+	 * Sort categories.
+	 * @param context
+	 */
 	public FilterDialogAdapter(Context context)
 	{
 		super(context, R.layout.cell_subheader);
@@ -36,11 +50,19 @@ public class FilterDialogAdapter extends ArrayAdapter<String>
 		Collections.sort(typeCategories);
 	}
 
+	/**
+	 * Called for each item in the list on initialization and each time a change is detected.
+	 *
+	 * @param position Index of list item.
+	 * @param convertView Item view. Can be null initially.
+	 * @param parent Parent of item view?
+	 * @return Item view.
+	 */
 	@NonNull
 	@Override
 	public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
 	{
-		String content = getItem(position);
+		String content = getItem(position); //string to display
 		int viewType = getItemViewType(position);
 		if (convertView == null)
 		{
@@ -64,7 +86,7 @@ public class FilterDialogAdapter extends ArrayAdapter<String>
 		TextView textView = convertView.findViewById(R.id.text);
 		textView.setText(content);
 
-		//check the correct textview
+		//if this is a category, check/uncheck it
 		if (viewType == CATEGORY_COLLEGE)
 		{
 			RadioButton radioButton = convertView.findViewById(R.id.radio);
@@ -85,6 +107,13 @@ public class FilterDialogAdapter extends ArrayAdapter<String>
 		return convertView;
 	}
 
+	/**
+	 * Return the name of the item in this position. Note that the calculation of index from position
+	 * is done taking into consideration the order or categories and the 2 headers.
+	 *
+	 * @param position Index of item in list.
+	 * @return String to be displayed.
+	 */
 	@Nullable
 	@Override
 	public String getItem(int position)
@@ -106,6 +135,12 @@ public class FilterDialogAdapter extends ArrayAdapter<String>
 		}
 	}
 
+	/**
+	 * Returns whether the item in this position is a header or a category, and what kind.
+	 *
+	 * @param position Index in list.
+	 * @return Int representing the type of the item.
+	 */
 	@Override
 	public int getItemViewType(int position)
 	{
@@ -118,12 +153,18 @@ public class FilterDialogAdapter extends ArrayAdapter<String>
 		return CATEGORY_TYPE;
 	}
 
+	/**
+	 * @return The number of different types of list items.
+	 */
 	@Override
 	public int getViewTypeCount()
 	{
 		return 4;
 	}
 
+	/**
+	 * @return The size of the list.
+	 */
 	@Override
 	public int getCount()
 	{

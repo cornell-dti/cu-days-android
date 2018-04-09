@@ -13,11 +13,20 @@ import android.widget.ListView;
 
 import org.cornelldti.cudays.util.NotificationCenter;
 
+/**
+ * Creates a dialog containing {@link UserData#collegeCategories} and {@link UserData#typeCategories},
+ * setting {@link UserData#collegeFilter} and {@link UserData#typeFilter} for events in the feed.
+ */
 public class FilterDialog extends DialogFragment implements AdapterView.OnItemClickListener
 {
 	private static final String TAG = FilterDialog.class.getSimpleName();
 	private FilterDialogAdapter adapter;
 
+	/**
+	 * Creates a dialog with a list of categories and an OK and Clear button.
+	 * @param savedInstanceState @inheritDoc
+	 * @return Dialog
+	 */
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -47,10 +56,18 @@ public class FilterDialog extends DialogFragment implements AdapterView.OnItemCl
 		return builder.create();
 	}
 
+	/**
+	 * Listen for clicks in the list of categories. Updates the adapter (to show new radioButton clicks)
+	 * and broadcasts a notification that the filters have changed.
+	 *
+	 * @param parent ListView
+	 * @param view Item view (clicked)
+	 * @param position Index of clicked view
+	 * @param id Item id (not set)
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 	{
-		Log.i(TAG, "onItemClick: someone was selected");
 		switch (adapter.getItemViewType(position))
 		{
 			case FilterDialogAdapter.CATEGORY_COLLEGE:

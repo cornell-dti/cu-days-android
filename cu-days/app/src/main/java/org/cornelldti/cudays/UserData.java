@@ -170,10 +170,10 @@ public final class UserData
 	}
 	/**
 	 * Loads {@link #allEvents}, {@link #selectedEvents}, {@link #collegeCategories}.
-	 * 1. Retrieves all events and collegeCategories from disk, adding them to {@link #allEvents}, {@link #collegeCategories}.
+	 * 1. Retrieves all events and categories from disk, adding them to {@link #allEvents}, {@link #collegeCategories}, and {@link #typeCategories}.
 	 * 2. Downloads updates from the database.
-	 * 3. Sorts all events and collegeCategories. Retrieves selected events. If anything WAS updated from the
-	 *    database, save the updates. Note that after events and collegeCategories are saved here, the lists
+	 * 3. Sorts all events and categories. Retrieves selected events. If anything WAS updated from the
+	 *    database, save the updates. Note that after events and categories are saved here, the maps
 	 *    they belong in should not be mutated any further.
 	 *
 	 * @param context

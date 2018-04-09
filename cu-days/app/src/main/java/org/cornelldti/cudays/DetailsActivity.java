@@ -339,7 +339,8 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	}
 
 	/**
-	 * Open the map with the event's location.
+	 * Open the map with the event's location. Only possible after loading {@link #placeName} and
+	 * {@link #placeAddress} in {@link #onMapReady(GoogleMap)}.
 	 */
 	private void startMap()
 	{

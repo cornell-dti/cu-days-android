@@ -54,13 +54,9 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		captionText.setText(event.caption);
 
 		if (event.full)
-		{
 			titleText.setAlpha(0.5f);
-		}
 		else
-		{
 			titleText.setAlpha(1);
-		}
 	}
 	/**
 	 * This object has been clicked. Open the details page.
