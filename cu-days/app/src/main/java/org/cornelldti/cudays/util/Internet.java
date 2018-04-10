@@ -249,7 +249,7 @@ public final class Internet
 				}
 				imageView.setImageBitmap(result);
 			}
-		}).download(DATABASE + "event/" + event.pk + "/image", false);
+		}).download(DATABASE + "image/" + event.imagePk, false);
 	}
 	/**
 	 * Opens the user to the website given.
