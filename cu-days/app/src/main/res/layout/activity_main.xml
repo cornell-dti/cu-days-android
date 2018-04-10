@@ -83,7 +83,7 @@
 		android:layout_marginRight="@dimen/margin"
 		android:layout_marginTop="@dimen/margin"
 		android:text="@string/logo_text"
-		android:textSize="@dimen/size_empty_state_text"
+		android:textSize="@dimen/size_logo_text"
 		android:gravity="center"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -94,13 +94,13 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		app:layout_constraintGuide_percent=".3" />
+		app:layout_constraintGuide_percent=".2" />
 
 	<android.support.constraint.Guideline
 		android:id="@+id/guideline2"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		app:layout_constraintGuide_percent=".7" />
+		app:layout_constraintGuide_percent=".8" />
 
 </android.support.constraint.ConstraintLayout>

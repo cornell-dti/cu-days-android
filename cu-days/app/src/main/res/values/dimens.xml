@@ -26,6 +26,7 @@
 	<dimen name="size_empty_state">100dp</dimen>
 	<dimen name="size_empty_state_text">14sp</dimen>
 	<dimen name="size_subheader">14sp</dimen>
+	<dimen name="size_logo_text">24sp</dimen>
 	<dimen name="height_date_picker">70dp</dimen>
 	<dimen name="height_feed_cell">80dp</dimen>
 	<dimen name="height_line">1dp</dimen>
