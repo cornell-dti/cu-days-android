@@ -32,7 +32,6 @@ public class FilterDialog extends DialogFragment implements AdapterView.OnItemCl
 	public Dialog onCreateDialog(Bundle savedInstanceState)
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		builder.setTitle(R.string.menu_filter);
 		builder.setPositiveButton(R.string.dialog_positive_button, null);
 		builder.setNegativeButton(R.string.dialog_clear_button, new DialogInterface.OnClickListener()
 		{
@@ -50,6 +49,7 @@ public class FilterDialog extends DialogFragment implements AdapterView.OnItemCl
 		ListView list = view.findViewById(android.R.id.list);
 		adapter = new FilterDialogAdapter(getContext());
 		list.setAdapter(adapter);
+		list.setDivider(null);
 		list.setOnItemClickListener(this);
 		builder.setView(view);
 

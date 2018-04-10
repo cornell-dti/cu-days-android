@@ -141,10 +141,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 		{
 			Event event = eventsIterator.next();
 
-			if (UserData.collegeFilter != null && UserData.collegeFilter.pk == event.collegeCategory)
-				continue;
-			if (UserData.typeFilter != null && UserData.typeFilter.pk == event.typeCategory)
-				continue;
+			if (UserData.collegeFilter == null || UserData.collegeFilter.pk == event.collegeCategory)
+				if (UserData.typeFilter == null || UserData.typeFilter.pk == event.typeCategory)
+					continue;
 			eventsIterator.remove();
 		}
 	}

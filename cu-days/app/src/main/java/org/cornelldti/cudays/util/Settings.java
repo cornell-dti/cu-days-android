@@ -25,6 +25,7 @@ public final class Settings
 	private static final String KEY_SELECTED_EVENTS = "selectedEvents";
 	private static final String KEY_CATEGORIES = "categories";
 	private static final String KEY_VERSION = "version";
+	private static final String KEY_FIRST_LAUNCH = "firstLaunch";
 
 	private static final String TAG = Settings.class.getSimpleName();
 
@@ -165,6 +166,23 @@ public final class Settings
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		return preferences.getInt(KEY_VERSION, 0);  //default version value = 0
+	}
+
+	/**
+	 * Returns whether or not this is the first time the user's opened the app. Then set the value
+	 * to false so this method will never return true again.
+	 * @param context
+	 * @return Whether this is this first launch
+	 */
+	public static boolean isFirstLaunch(Context context)
+	{
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		boolean isFirstLaunch = preferences.getBoolean(KEY_FIRST_LAUNCH, true);
+		//FIRST_LAUNCH will be false from now on
+		preferences.edit()
+				.putBoolean(KEY_FIRST_LAUNCH, false)
+				.apply();
+		return isFirstLaunch;
 	}
 
 	/**
