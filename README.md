@@ -3,9 +3,11 @@ CU Days v1.0
 An **Android** app for accepted Cornell students and their families to view Cornell Day events. The **iOS** branch can be found [here](https://github.com/cornell-dti/cu-days-ios).
 Based on the O-Week app [here](https://github.com/cornell-dti/o-week-android).
 
+<img src="https://raw.githubusercontent.com/cornell-dti/cu-days-android/master/Screenshots/1.png" width="250px">  <img src="https://raw.githubusercontent.com/cornell-dti/cu-days-android/master/Screenshots/2.png" width="250px">  <img src="https://raw.githubusercontent.com/cornell-dti/cu-days-android/master/Screenshots/3.png" width="250px">
+
 Getting Started
 ------
-You will need **Android Studio 3.1** to run the latest version of this app, which uses the following SDKs. Last update **3/31/2018** (remember to check "Show Package Details" on the lower right):
+You will need **Android Studio 3.1** to run the latest version of this app, which uses the following SDKs. Last update **4/9/2018** (remember to check "Show Package Details" on the lower right):
 
 SDK Platforms (tab)
  * Android API 27
@@ -17,7 +19,7 @@ SDK Tools (tab)
  * Android SDK Platform-Tools 27.0.0
  * Android SDK Tools 26.1.1
  * Documentation for Android SDK
- * Google Play Services, rev 46
+ * Google Play Services, rev 48
  * Support Repository
    * ConstraintLayout for Android 1.0.2
    * Solver for ConstraintLayout 1.0.2
